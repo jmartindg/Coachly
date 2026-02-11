@@ -49,9 +49,9 @@ class BlogController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id): void
+    public function show(Blog $blog): View
     {
-        //
+        return view('blog.show', ['blog' => $blog]);
     }
 
     /**

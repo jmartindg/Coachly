@@ -10,6 +10,7 @@ Route::get('/about', [GuestPageController::class, 'about'])->name('about');
 Route::get('/contact', [GuestPageController::class, 'contact'])->name('contact');
 Route::get('/programs', [GuestPageController::class, 'programs'])->name('programs');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+Route::get('/blog/{blog}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/login', [GuestPageController::class, 'login'])->name('login');
 
 Route::get('/coach', [CoachController::class, 'index'])->name('coach.index');

@@ -6,7 +6,9 @@
             <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($blogs as $blog)
                     <li class="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
-                        <h2 class="text-lg font-semibold text-slate-50 mb-1">{{ $blog->title }}</h2>
+                        <h2 class="text-lg font-semibold text-slate-50 mb-1">
+                            <a href="{{ route('blog.show', $blog) }}" class="hover:underline">{{ $blog->title }}</a>
+                        </h2>
                         @if ($blog->author)
                             <p class="text-xs text-slate-400 mb-2">{{ $blog->author }}</p>
                         @endif
