@@ -27,7 +27,8 @@
             @if ($blogs->isNotEmpty())
                 <ul class="space-y-3">
                     @foreach ($blogs as $blog)
-                        <li class="rounded-xl border border-slate-800 bg-slate-950/60 p-4 flex items-start justify-between gap-4">
+                        <li
+                            class="rounded-xl border border-slate-800 bg-slate-950/60 p-4 flex items-start justify-between gap-4">
                             <div class="min-w-0">
                                 <h3 class="text-sm font-semibold text-slate-50 truncate">{{ $blog->title }}</h3>
                                 @if ($blog->author)
@@ -35,13 +36,26 @@
                                 @endif
                                 <p class="text-xs text-slate-500 mt-1 line-clamp-2">{{ $blog->description }}</p>
                             </div>
-                            <span class="shrink-0 text-xs text-slate-500">{{ $blog->created_at->format('M j, Y') }}</span>
+                            <div class="shrink-0 flex gap-3 flex-col items-end">
+                                <span class="text-xs text-slate-500">{{ $blog->created_at->format('M j, Y') }}</span>
+                                <div class="flex gap-2 items-center">
+                                    <a href="{{ route('coach.blog.edit', $blog) }}"
+                                        class="text-xs text-slate-400 hover:text-slate-50 py-1">Edit</a>
+                                    <form action="{{ route('coach.blog.destroy', $blog) }}" method="post"
+                                        class="inline" onsubmit="return confirm('Delete this post?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="text-xs text-red-400 bg-red-500/10 px-2 py-1 rounded-full hover:text-red-300 cursor-pointer">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
                         </li>
                     @endforeach
                 </ul>
             @else
                 <div class="rounded-xl border border-slate-800 bg-slate-950/60 p-6 text-center">
-                    <p class="text-sm text-slate-400">No posts yet. Use “New post” when you’re ready to add one.</p>
+                    <p class="text-sm text-slate-400">No posts yet. Use “New post” when you're ready to add one.</p>
                 </div>
             @endif
         </section>

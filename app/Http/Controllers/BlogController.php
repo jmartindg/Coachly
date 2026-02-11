@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Blog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class BlogController extends Controller
@@ -64,16 +65,28 @@ class BlogController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id): void
+    public function update(Request $request, Blog $blog): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', Rule::unique('blogs', 'slug')->ignore($blog->id)],
+            'description' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            'author' => ['nullable', 'string', 'max:255']
+        ]);
+
+        $blog->update($validated);
+
+        return redirect()->route('coach.index')->with('success', 'Blog post updated.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): void
+    public function destroy(Blog $blog): RedirectResponse
     {
-        //
+        $blog->delete();
+
+        return redirect()->route('coach.index')->with('success', 'Blog post deleted.');
     }
 }
