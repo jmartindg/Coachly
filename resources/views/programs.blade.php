@@ -1,5 +1,5 @@
 <x-layout>
-     <x-slot:title>Programs</x-slot:title>
+    <x-slot:title>Programs</x-slot:title>
     <div class="max-w-4xl mx-auto space-y-10">
         <section class="space-y-3">
             <p class="text-xs uppercase tracking-[0.2em] text-emerald-300/80">
@@ -33,8 +33,10 @@
                 </p>
             </article>
 
-            <article class="rounded-2xl border border-emerald-500/70 bg-slate-900/70 p-5 sm:p-6 shadow-lg shadow-emerald-500/20 flex flex-col relative">
-                <span class="absolute -top-3 right-4 inline-flex items-center rounded-full bg-emerald-500 px-3 py-1 text-[0.65rem] font-semibold text-slate-950 shadow-md shadow-emerald-500/40">
+            <article
+                class="rounded-2xl border border-emerald-500/70 bg-slate-900/70 p-5 sm:p-6 shadow-lg shadow-emerald-500/20 flex flex-col relative">
+                <span
+                    class="absolute -top-3 right-4 inline-flex items-center rounded-full bg-emerald-500 px-3 py-1 text-[0.65rem] font-semibold text-slate-950 shadow-md shadow-emerald-500/40">
                     Most popular
                 </span>
                 <h2 class="text-sm font-semibold text-slate-50 mb-1">1:1 Online Coaching</h2>
@@ -57,7 +59,7 @@
 
             <article class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6 flex flex-col">
                 <h2 class="text-sm font-semibold text-slate-50 mb-1">Hybrid Coaching</h2>
-                    <p class="text-xs text-slate-400 mb-4">In-person + online</p>
+                <p class="text-xs text-slate-400 mb-4">In-person + online</p>
                 <p class="text-xs text-slate-300 mb-4">
                     Combines in-gym sessions with between-session support, so you get hands-on coaching plus structure
                     for the rest of the week.
@@ -74,16 +76,15 @@
             </article>
         </section>
 
-        <section class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6 space-y-4 text-xs text-slate-300">
+        <section
+            class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6 space-y-4 text-xs text-slate-300">
             <h2 class="text-sm font-semibold text-slate-50">How to choose a program</h2>
             <p>
                 Not sure which path makes the most sense? Start with 1:1 Online Coaching—we can always shift you into
                 Foundations or Hybrid later once we understand your schedule, training history, and goals.
             </p>
-            <a
-                href="/contact"
-                class="inline-flex items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-xs sm:text-sm font-semibold text-slate-950 shadow-md shadow-emerald-500/30 hover:bg-emerald-400 transition-colors"
-            >
+            <a href="/contact"
+                class="inline-flex items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-xs sm:text-sm font-semibold text-slate-950 shadow-md shadow-emerald-500/30 hover:bg-emerald-400 transition-colors">
                 Ask which program is right for you
             </a>
         </section>

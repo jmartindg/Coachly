@@ -14,37 +14,24 @@
             <label for="email" class="block text-xs font-medium text-slate-200">
                 Email
             </label>
-            <input
-                type="email"
-                id="email"
-                name="email"
+            <input type="email" id="email" name="email"
                 class="block w-full rounded-md border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-50 placeholder-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400"
-                placeholder="you@example.com"
-                required
-            >
+                placeholder="you@example.com" required>
         </div>
 
         <div class="space-y-1">
             <label for="password" class="block text-xs font-medium text-slate-200">
                 Password
             </label>
-            <input
-                type="password"
-                id="password"
-                name="password"
+            <input type="password" id="password" name="password"
                 class="block w-full rounded-md border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-50 placeholder-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400"
-                placeholder="••••••••"
-                required
-            >
+                placeholder="••••••••" required>
         </div>
 
         <div class="flex items-center justify-between gap-3">
             <label class="inline-flex items-center gap-2 text-[0.7rem] text-slate-300">
-                <input
-                    type="checkbox"
-                    name="remember"
-                    class="h-3.5 w-3.5 rounded border-slate-600 bg-slate-950/80 text-emerald-500 focus:ring-emerald-500"
-                >
+                <input type="checkbox" name="remember"
+                    class="h-3.5 w-3.5 rounded border-slate-600 bg-slate-950/80 text-emerald-500 focus:ring-emerald-500">
                 <span>Remember me</span>
             </label>
 
@@ -53,10 +40,8 @@
             </a>
         </div>
 
-        <button
-            type="submit"
-            class="mt-2 inline-flex w-full items-center justify-center rounded-full bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-slate-950 shadow-md shadow-emerald-500/40 hover:bg-emerald-400 transition-colors"
-        >
+        <button type="submit"
+            class="mt-2 inline-flex w-full items-center justify-center rounded-full bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-slate-950 shadow-md shadow-emerald-500/40 hover:bg-emerald-400 transition-colors">
             Log in
         </button>
     </form>

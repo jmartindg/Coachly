@@ -1,5 +1,5 @@
 <x-layout>
-     <x-slot:title>About</x-slot:title>
+    <x-slot:title>About</x-slot:title>
     <div class="max-w-3xl mx-auto space-y-8">
         <section class="space-y-3">
             <p class="text-xs uppercase tracking-[0.2em] text-emerald-300/80">
@@ -31,10 +31,14 @@
             <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 space-y-3">
                 <h2 class="text-sm font-semibold text-slate-50">Our coaching philosophy</h2>
                 <ul class="space-y-2 text-xs text-slate-300">
-                    <li><span class="text-emerald-300">•</span> Strength and muscle first: a strong body is easier to maintain.</li>
-                    <li><span class="text-emerald-300">•</span> Flexible nutrition: no “good” or “bad” foods—just context.</li>
-                    <li><span class="text-emerald-300">•</span> Habits over willpower: we design systems that work on busy weeks.</li>
-                    <li><span class="text-emerald-300">•</span> Data-driven, human-first coaching: metrics plus honest check-ins.</li>
+                    <li><span class="text-emerald-300">•</span> Strength and muscle first: a strong body is easier to
+                        maintain.</li>
+                    <li><span class="text-emerald-300">•</span> Flexible nutrition: no “good” or “bad” foods—just
+                        context.</li>
+                    <li><span class="text-emerald-300">•</span> Habits over willpower: we design systems that work on
+                        busy weeks.</li>
+                    <li><span class="text-emerald-300">•</span> Data-driven, human-first coaching: metrics plus honest
+                        check-ins.</li>
                 </ul>
             </div>
         </section>
@@ -61,10 +65,8 @@
                 </div>
             </div>
 
-            <a
-                href="/contact"
-                class="inline-flex mt-2 items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-xs sm:text-sm font-semibold text-slate-950 shadow-md shadow-emerald-500/30 hover:bg-emerald-400 transition-colors"
-            >
+            <a href="/contact"
+                class="inline-flex mt-2 items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-xs sm:text-sm font-semibold text-slate-950 shadow-md shadow-emerald-500/30 hover:bg-emerald-400 transition-colors">
                 Talk to Coach Lee
             </a>
         </section>

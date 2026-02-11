@@ -1,5 +1,5 @@
 <x-layout>
-     <x-slot:title>Contact</x-slot:title>
+    <x-slot:title>Contact</x-slot:title>
     <div class="max-w-2xl mx-auto space-y-8">
         <section class="space-y-3">
             <p class="text-xs uppercase tracking-[0.2em] text-emerald-300/80">
@@ -39,10 +39,12 @@
             </div>
         </section>
 
-        <section class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6 space-y-3 text-xs text-slate-300">
+        <section
+            class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6 space-y-3 text-xs text-slate-300">
             <h2 class="text-sm font-semibold text-slate-50">Not ready to commit?</h2>
             <p>
-                No problem. You can still reach out with questions about training, nutrition, or how coaching works. Think
+                No problem. You can still reach out with questions about training, nutrition, or how coaching works.
+                Think
                 of this as a low-pressure way to get clear on your next step.
             </p>
         </section>
