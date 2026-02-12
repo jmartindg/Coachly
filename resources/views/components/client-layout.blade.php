@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ isset($title) ? $title . ' - Coach' : 'Coach - Coachly Fitness' }}</title>
+    <title>{{ isset($title) ? $title . ' - Client' : 'Client - Coachly Fitness' }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -22,17 +22,11 @@
                     <p class="text-xs text-slate-400">Online strength & lifestyle coaching</p>
                 </div>
             </div>
-            <nav class="flex items-center gap-4">
-                <a href="{{ route('coach.index') }}"
-                    class="text-xs text-slate-400 hover:text-slate-50 transition-colors">Dashboard</a>
-                <a href="{{ route('coach.clients') }}"
-                    class="text-xs text-slate-400 hover:text-slate-50 transition-colors">Clients</a>
-                <form method="POST" action="{{ route('logout') }}" class="inline-flex items-center">
-                    @csrf
-                    <button type="submit"
-                        class="text-xs text-slate-400 hover:text-slate-50 transition-colors cursor-pointer">Logout</button>
-                </form>
-            </nav>
+            <form method="POST" action="{{ route('logout') }}" class="inline">
+                @csrf
+                <button type="submit"
+                    class="text-xs text-slate-400 hover:text-slate-50 transition-colors cursor-pointer">Logout</button>
+            </form>
         </header>
 
         <main class="flex-1">

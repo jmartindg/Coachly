@@ -7,25 +7,37 @@
         Sign up to get started with your coaching journey.
     </p>
 
-    <form action="#" method="POST" class="space-y-4">
+    <form action="{{ route('register') }}" method="POST" class="space-y-4">
         @csrf
+
+        @if ($errors->isNotEmpty())
+            <p class="rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+                Please fix the errors below.
+            </p>
+        @endif
 
         <div class="space-y-1">
             <label for="name" class="block text-xs font-medium text-slate-200">
                 Name
             </label>
-            <input type="text" id="name" name="name"
-                class="block w-full rounded-md border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-50 placeholder-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+            <input type="text" id="name" name="name" value="{{ old('name') }}"
+                class="block w-full rounded-md border {{ $errors->has('name') ? 'border-red-500' : 'border-slate-700' }} bg-slate-950/60 px-3 py-2 text-sm text-slate-50 placeholder-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400"
                 placeholder="Your name" required>
+            @error('name')
+                <p class="text-xs text-red-400">{{ $message }}</p>
+            @enderror
         </div>
 
         <div class="space-y-1">
             <label for="email" class="block text-xs font-medium text-slate-200">
                 Email
             </label>
-            <input type="email" id="email" name="email"
-                class="block w-full rounded-md border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-50 placeholder-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+            <input type="email" id="email" name="email" value="{{ old('email') }}"
+                class="block w-full rounded-md border {{ $errors->has('email') ? 'border-red-500' : 'border-slate-700' }} bg-slate-950/60 px-3 py-2 text-sm text-slate-50 placeholder-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400"
                 placeholder="you@example.com" required>
+            @error('email')
+                <p class="text-xs text-red-400">{{ $message }}</p>
+            @enderror
         </div>
 
         <div class="space-y-1">
@@ -33,6 +45,18 @@
                 Password
             </label>
             <input type="password" id="password" name="password"
+                class="block w-full rounded-md border {{ $errors->has('password') ? 'border-red-500' : 'border-slate-700' }} bg-slate-950/60 px-3 py-2 text-sm text-slate-50 placeholder-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                placeholder="••••••••" required>
+            @error('password')
+                <p class="text-xs text-red-400">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="space-y-1">
+            <label for="password_confirmation" class="block text-xs font-medium text-slate-200">
+                Confirm Password
+            </label>
+            <input type="password" id="password_confirmation" name="password_confirmation"
                 class="block w-full rounded-md border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-50 placeholder-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400"
                 placeholder="••••••••" required>
         </div>

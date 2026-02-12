@@ -15,7 +15,7 @@ class BlogController extends Controller
      */
     public function index(): View
     {
-        $blogs = Blog::query()->latest()->limit(10)->get();
+        $blogs = Blog::query()->with('user')->latest()->limit(10)->get();
 
         return view('blog', ['blogs' => $blogs]);
     }
@@ -38,7 +38,7 @@ class BlogController extends Controller
             'slug' => ['required', 'string', 'max:255', 'unique:blogs,slug'],
             'description' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
-            'author' => ['nullable', 'string', 'max:255'],
+            'user_id' => ['required', 'exists:users,id'],
         ]);
 
         Blog::create($validated);
@@ -72,7 +72,7 @@ class BlogController extends Controller
             'slug' => ['required', 'string', 'max:255', Rule::unique('blogs', 'slug')->ignore($blog->id)],
             'description' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
-            'author' => ['nullable', 'string', 'max:255']
+            'user_id' => ['required', 'exists:users,id'],
         ]);
 
         $blog->update($validated);

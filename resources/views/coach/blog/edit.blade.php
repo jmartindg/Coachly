@@ -3,8 +3,8 @@
 
     <div class="space-y-8">
         <div class="flex flex-col gap-2">
-            <a href="{{ route('coach.index') }}"
-                class="text-xs text-slate-400 hover:text-slate-50 transition-colors">← Dashboard</a>
+            <a href="{{ route('coach.index') }}" class="text-xs text-slate-400 hover:text-slate-50 transition-colors">←
+                Dashboard</a>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-50">Edit post</h1>
         </div>
 
@@ -57,18 +57,32 @@
             </div>
 
             <div class="space-y-2">
-                <label for="author" class="block text-sm font-medium text-slate-200">Author</label>
-                <input type="text" name="author" id="author" placeholder="Author name"
-                    value="{{ old('author', $blog->author) }}"
-                    class="w-full rounded-lg border {{ $errors->has('author') ? 'border-red-500' : 'border-slate-700' }} bg-slate-950/80 px-3 py-2 text-sm text-slate-50 placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                @error('author')
+                <label for="user_id" class="block text-sm font-medium text-slate-200">Author</label>
+                <div class="relative">
+                    <select name="user_id" id="user_id"
+                        class="w-full appearance-none rounded-lg border {{ $errors->has('user_id') ? 'border-red-500' : 'border-slate-700' }} bg-slate-950/80 pl-3 pr-10 py-2 text-sm text-slate-50 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                        <option value="">Select author</option>
+                        @foreach ($coaches as $coach)
+                            <option value="{{ $coach->id }}"
+                                {{ old('user_id', $blog->user_id) == $coach->id ? 'selected' : '' }}>
+                                {{ $coach->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <svg class="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
+                    </svg>
+                </div>
+                @error('user_id')
                     <p class="text-xs text-red-400">{{ $message }}</p>
                 @enderror
             </div>
 
             <div class="flex gap-3 pt-2">
                 <button type="submit"
-                    class="inline-flex items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 transition-colors">
+                    class="inline-flex items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 transition-colors cursor-pointer">
                     Update
                 </button>
                 <a href="{{ route('coach.index') }}"
@@ -80,7 +94,7 @@
     </div>
 
     <script>
-        document.getElementById('title').addEventListener('input', function () {
+        document.getElementById('title').addEventListener('input', function() {
             const slug = this.value
                 .toLowerCase()
                 .trim()

@@ -7,6 +7,38 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Coachly Fitness
+
+Online strength & lifestyle coaching application.
+
+This project uses **SQLite** for the database.
+
+### Prerequisites
+
+- [PHP](https://www.php.net/) 8.2 or higher
+- [Composer](https://getcomposer.org/)
+- [Node.js](https://nodejs.org/) and npm
+- SQLite (PHP extension)
+
+### Running Locally
+
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate:fresh --seed
+composer run dev
+```
+
+### Test Users
+
+After running `php artisan migrate:fresh --seed`, use these credentials:
+
+| Role  | Email               | Password   |
+|-------|---------------------|------------|
+| Client| client@example.com  | password   |
+| Coach | coachlee@coachly.fit| password   |
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

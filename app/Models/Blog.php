@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Blog extends Model
 {
-    protected $fillable = ['title', 'slug', 'description', 'content', 'author'];
+    protected $fillable = ['title', 'slug', 'description', 'content', 'author', 'user_id'];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     public function user(): BelongsTo
     {

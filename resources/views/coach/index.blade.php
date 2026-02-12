@@ -10,7 +10,7 @@
 
         <section>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-50">Dashboard</h1>
-            <p class="text-sm text-slate-400">Welcome back, Coach Lee.</p>
+            <p class="text-sm text-slate-400">Welcome back, {{ auth()->user()->name }}.</p>
         </section>
 
         <section class="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6 space-y-4">
@@ -31,8 +31,8 @@
                             class="rounded-xl border border-slate-800 bg-slate-950/60 p-4 flex items-start justify-between gap-4">
                             <div class="min-w-0">
                                 <h3 class="text-sm font-semibold text-slate-50 truncate">{{ $blog->title }}</h3>
-                                @if ($blog->author)
-                                    <p class="text-xs text-slate-400 mt-0.5">{{ $blog->author }}</p>
+                                @if ($blog->user?->name ?? $blog->author)
+                                    <p class="text-xs text-slate-400 mt-0.5">{{ $blog->user?->name ?? $blog->author }}</p>
                                 @endif
                                 <p class="text-xs text-slate-500 mt-1 line-clamp-2">{{ $blog->description }}</p>
                             </div>

@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use App\Models\Blog;
+use App\Models\User;
 use Illuminate\View\View;
 
 class CoachController extends Controller
 {
     public function index(): View
     {
-        $blogs = Blog::query()->latest()->get();
+        $blogs = Blog::query()->with('user')->latest()->get();
 
         return view('coach.index', ['blogs' => $blogs]);
     }
@@ -21,11 +23,15 @@ class CoachController extends Controller
 
     public function createBlog(): View
     {
-        return view('coach.blog.create');
+        $coaches = User::query()->where('role', Role::Coach)->orderBy('name')->get();
+
+        return view('coach.blog.create', ['coaches' => $coaches]);
     }
 
     public function editBlog(Blog $blog): View
     {
-        return view('coach.blog.edit', ['blog' => $blog]);
+        $coaches = User::query()->where('role', Role::Coach)->orderBy('name')->get();
+
+        return view('coach.blog.edit', ['blog' => $blog, 'coaches' => $coaches]);
     }
 }

@@ -11,7 +11,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'client' => \App\Http\Middleware\EnsureUserIsClient::class,
+            'coach' => \App\Http\Middleware\EnsureUserIsCoach::class,
+            'no-cache' => \App\Http\Middleware\PreventAuthenticatedPageCaching::class,
+        ]);
+
+        $middleware->redirectUsersTo(fn ($request) => $request->user()->isCoach()
+            ? route('coach.index')
+            : route('client.index'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

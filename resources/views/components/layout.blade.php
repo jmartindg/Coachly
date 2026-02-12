@@ -56,7 +56,7 @@
                     </a>
                     <a href="{{ route('login') }}"
                         class="inline-flex shrink-0 w-full items-center justify-center whitespace-nowrap rounded-full border border-slate-600/70 px-3 py-1.5 text-xs font-medium text-slate-100 hover:border-slate-300 hover:text-slate-50 transition-colors lg:w-auto">
-                        Client Login
+                        Login
                     </a>
                 </div>
             </nav>

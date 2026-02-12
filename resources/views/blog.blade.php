@@ -9,8 +9,8 @@
                         <h2 class="text-lg font-semibold text-slate-50 mb-1">
                             <a href="{{ route('blog.show', $blog) }}" class="hover:underline">{{ $blog->title }}</a>
                         </h2>
-                        @if ($blog->author)
-                            <p class="text-xs text-slate-400 mb-2">{{ $blog->author }}</p>
+                        @if ($blog->user?->name ?? $blog->author)
+                            <p class="text-xs text-slate-400 mb-2">{{ $blog->user?->name ?? $blog->author }}</p>
                         @endif
                         <p class="text-sm text-slate-300">{{ $blog->description }}</p>
                     </li>
