@@ -11,8 +11,8 @@
 
 <body class="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
     <div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 flex-1 flex flex-col">
-        <header class="mb-8 sm:mb-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div class="flex items-center justify-between gap-4 md:justify-start">
+        <header class="mb-8 sm:mb-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div class="flex w-full items-center justify-between gap-4">
                 <div class="flex items-center gap-2">
                     <div
                         class="h-9 w-9 rounded-full bg-linear-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/40 flex items-center justify-center text-slate-950 font-extrabold text-xs">
@@ -25,7 +25,7 @@
                 </div>
 
                 <button type="button"
-                    class="shrink-0 inline-flex items-center justify-center rounded-full border border-slate-700 px-2.5 py-1.5 text-xs font-medium text-slate-100 hover:border-slate-300 hover:text-slate-50 transition-colors md:hidden"
+                    class="shrink-0 inline-flex lg:hidden items-center justify-center rounded-full border border-slate-700 px-2.5 py-1.5 text-xs font-medium text-slate-100 hover:border-slate-300 hover:text-slate-50 transition-colors"
                     aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-navigation"
                     data-mobile-menu-toggle>
                     <span class="flex flex-col justify-between h-3 w-3">
@@ -37,22 +37,28 @@
             </div>
 
             <nav id="primary-navigation"
-                class="w-full hidden flex-col rounded-xl border border-slate-800 bg-slate-950/95 px-4 py-4 text-sm text-slate-300 shadow-lg shadow-slate-950/60 md:w-auto md:flex md:flex-row md:items-center md:justify-end md:gap-4 md:rounded-full md:border-slate-800/70 md:bg-slate-900/60 md:px-4 md:py-2 md:text-xs md:shadow-none"
+                class="w-full max-lg:hidden flex-col rounded-xl border border-slate-800 bg-slate-950/95 px-4 py-4 text-sm text-slate-300 shadow-lg shadow-slate-950/60 lg:w-auto lg:flex lg:flex-row lg:items-center lg:justify-end lg:gap-4 lg:rounded-full lg:border-slate-800/70 lg:bg-slate-900/60 lg:px-4 lg:py-2 lg:text-xs lg:shadow-none"
                 data-mobile-menu>
                 <a href="{{ route('home') }}"
-                    class="py-2 md:py-0 md:px-2 hover:text-slate-50 transition-colors">Home</a>
+                    class="py-2 lg:py-0 lg:px-2 hover:text-slate-50 transition-colors">Home</a>
                 <a href="{{ route('programs') }}"
-                    class="py-2 md:py-0 md:px-2 hover:text-slate-50 transition-colors">Programs</a>
+                    class="py-2 lg:py-0 lg:px-2 hover:text-slate-50 transition-colors">Programs</a>
                 <a href="{{ route('blog') }}"
-                    class="py-2 md:py-0 md:px-2 hover:text-slate-50 transition-colors">Blog</a>
+                    class="py-2 lg:py-0 lg:px-2 hover:text-slate-50 transition-colors">Blog</a>
                 <a href="{{ route('about') }}"
-                    class="py-2 md:py-0 md:px-2 hover:text-slate-50 transition-colors">About</a>
+                    class="py-2 lg:py-0 lg:px-2 hover:text-slate-50 transition-colors">About</a>
                 <a href="{{ route('contact') }}"
-                    class="py-2 md:py-0 md:px-2 hover:text-slate-50 transition-colors">Contact</a>
-                <a href="{{ route('login') }}"
-                    class="mt-3 inline-flex items-center justify-center rounded-full border border-slate-600/70 px-3 py-1.5 text-xs font-medium text-slate-100 hover:border-slate-300 hover:text-slate-50 transition-colors md:mt-0 md:ml-2">
-                    Client Login
-                </a>
+                    class="py-2 lg:py-0 lg:px-2 hover:text-slate-50 transition-colors">Contact</a>
+                <div class="flex flex-col gap-2 mt-3 lg:flex-row lg:mt-0 lg:ml-2">
+                    <a href="{{ route('register') }}"
+                        class="inline-flex shrink-0 w-full items-center justify-center whitespace-nowrap rounded-full border border-slate-600/70 px-3 py-1.5 text-xs font-medium text-slate-100 hover:border-slate-300 hover:text-slate-50 transition-colors lg:w-auto">
+                        Register
+                    </a>
+                    <a href="{{ route('login') }}"
+                        class="inline-flex shrink-0 w-full items-center justify-center whitespace-nowrap rounded-full border border-slate-600/70 px-3 py-1.5 text-xs font-medium text-slate-100 hover:border-slate-300 hover:text-slate-50 transition-colors lg:w-auto">
+                        Client Login
+                    </a>
+                </div>
             </nav>
         </header>
 

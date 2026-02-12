@@ -1,14 +1,23 @@
 <x-auth-layout>
-    <x-slot:title>Login</x-slot:title>
+    <x-slot:title>Register</x-slot:title>
     <h1 class="text-lg sm:text-xl font-semibold text-slate-50 mb-1">
-        Welcome back
+        Create your account
     </h1>
     <p class="text-xs text-slate-400 mb-5">
-        Log in to view your programs, check-ins, and progress.
+        Sign up to get started with your coaching journey.
     </p>
 
     <form action="#" method="POST" class="space-y-4">
         @csrf
+
+        <div class="space-y-1">
+            <label for="name" class="block text-xs font-medium text-slate-200">
+                Name
+            </label>
+            <input type="text" id="name" name="name"
+                class="block w-full rounded-md border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-50 placeholder-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                placeholder="Your name" required>
+        </div>
 
         <div class="space-y-1">
             <label for="email" class="block text-xs font-medium text-slate-200">
@@ -28,26 +37,14 @@
                 placeholder="••••••••" required>
         </div>
 
-        <div class="flex items-center justify-between gap-3">
-            <label class="inline-flex items-center gap-2 text-[0.7rem] text-slate-300">
-                <input type="checkbox" name="remember"
-                    class="h-3.5 w-3.5 rounded border-slate-600 bg-slate-950/80 text-emerald-500 focus:ring-emerald-500">
-                <span>Remember me</span>
-            </label>
-
-            <a href="#" class="text-[0.7rem] text-emerald-300 hover:text-emerald-200 transition-colors">
-                Forgot password?
-            </a>
-        </div>
-
         <button type="submit"
             class="mt-2 inline-flex w-full items-center justify-center rounded-full bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-slate-950 shadow-md shadow-emerald-500/40 hover:bg-emerald-400 transition-colors">
-            Log in
+            Create account
         </button>
     </form>
 
     <p class="text-center text-[0.7rem] text-slate-400 mt-4">
-        Don't have an account yet?
-        <a href="{{ route('register') }}" class="text-emerald-300 hover:text-emerald-200 transition-colors">Sign up</a>
+        Already have an account?
+        <a href="{{ route('login') }}" class="text-emerald-300 hover:text-emerald-200 transition-colors">Log in</a>
     </p>
 </x-auth-layout>

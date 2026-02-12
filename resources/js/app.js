@@ -10,18 +10,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const openMenu = () => {
         menu.classList.remove('hidden');
-        menu.classList.add('flex');
+        menu.classList.add('!flex');
         toggle.setAttribute('aria-expanded', 'true');
     };
 
     const closeMenu = () => {
         menu.classList.add('hidden');
-        menu.classList.remove('flex');
+        menu.classList.remove('!flex');
         toggle.setAttribute('aria-expanded', 'false');
     };
 
     toggle.addEventListener('click', () => {
-        const isOpen = menu.classList.contains('flex') && !menu.classList.contains('hidden');
+        const isOpen = menu.classList.contains('!flex') && !menu.classList.contains('hidden');
 
         if (isOpen) {
             closeMenu();
@@ -30,9 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Close the menu if the viewport is resized to desktop
+    // Reset menu state when viewport is resized to desktop (lg: 1024px)
     window.addEventListener('resize', () => {
-        if (window.innerWidth >= 768) {
+        if (window.innerWidth >= 1024) {
+            menu.classList.remove('hidden', '!flex');
+            toggle.setAttribute('aria-expanded', 'false');
+        } else {
             closeMenu();
         }
     });

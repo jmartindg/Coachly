@@ -12,6 +12,7 @@ Route::get('/programs', [GuestPageController::class, 'programs'])->name('program
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/blog/{blog}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/login', [GuestPageController::class, 'login'])->name('login');
+Route::get('/register', [GuestPageController::class, 'register'])->name('register');
 
 Route::get('/coach', [CoachController::class, 'index'])->name('coach.index');
 Route::get('/coach/blog/create', [CoachController::class, 'createBlog'])->name('coach.blog.create');

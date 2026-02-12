@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class GuestPageController extends Controller
 {
     public function home()
@@ -34,5 +32,10 @@ class GuestPageController extends Controller
     public function login()
     {
         return view('login');
+    }
+
+    public function register()
+    {
+        return view('register');
     }
 }
