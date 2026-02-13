@@ -40,6 +40,45 @@
             @enderror
         </div>
 
+        <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1">
+                <label for="age" class="block text-xs font-medium text-slate-200">
+                    Age
+                </label>
+                <input type="number" id="age" name="age" value="{{ old('age') }}" min="1"
+                    max="150"
+                    class="block w-full rounded-md border {{ $errors->has('age') ? 'border-red-500' : 'border-slate-700' }} bg-slate-950/60 px-3 py-2 text-sm text-slate-50 placeholder-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                    placeholder="25">
+                @error('age')
+                    <p class="text-xs text-red-400">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="space-y-1">
+                <label for="sex" class="block text-xs font-medium text-slate-200">
+                    Sex
+                </label>
+                <div class="relative">
+                    <select id="sex" name="sex"
+                        class="block w-full appearance-none rounded-md border {{ $errors->has('sex') ? 'border-red-500' : 'border-slate-700' }} bg-slate-950/60 pl-3 pr-10 py-2 text-sm text-slate-50 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400">
+                        <option value="">Select</option>
+                        @foreach (\App\Enums\Sex::cases() as $option)
+                            <option value="{{ $option->value }}" @selected(old('sex') === $option->value)>
+                                {{ $option->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <svg class="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
+                    </svg>
+                </div>
+                @error('sex')
+                    <p class="text-xs text-red-400">{{ $message }}</p>
+                @enderror
+            </div>
+        </div>
+
         <div class="space-y-1">
             <label for="password" class="block text-xs font-medium text-slate-200">
                 Password

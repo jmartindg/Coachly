@@ -19,10 +19,10 @@
             </p>
 
             <div class="flex flex-wrap items-center gap-3 mb-8">
-                <button type="button"
+                <a href="{{ route('login') }}"
                     class="inline-flex items-center justify-center rounded-full bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/40 hover:bg-emerald-400 transition-colors">
                     Apply for coaching
-                </button>
+                </a>
 
                 <button type="button"
                     class="inline-flex items-center justify-center rounded-full border border-slate-600/70 px-4 py-2 text-xs sm:text-sm font-medium text-slate-100 hover:border-slate-300 hover:text-slate-50 transition-colors">

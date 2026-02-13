@@ -22,11 +22,19 @@
                     <p class="text-xs text-slate-400">Online strength & lifestyle coaching</p>
                 </div>
             </div>
-            <form method="POST" action="{{ route('logout') }}" class="inline">
-                @csrf
-                <button type="submit"
-                    class="text-xs text-slate-400 hover:text-slate-50 transition-colors cursor-pointer">Logout</button>
-            </form>
+            <div class="flex items-center gap-4">
+                <nav class="flex items-center gap-4">
+                    <a href="{{ route('client.index') }}"
+                        class="text-xs text-slate-400 hover:text-slate-50 transition-colors">Dashboard</a>
+                    <a href="{{ route('client.profile') }}"
+                        class="text-xs text-slate-400 hover:text-slate-50 transition-colors">Profile</a>
+                </nav>
+                <form method="POST" action="{{ route('logout') }}" class="inline-flex items-center">
+                    @csrf
+                    <button type="submit"
+                        class="text-xs text-slate-400 hover:text-slate-50 transition-colors cursor-pointer">Logout</button>
+                </form>
+            </div>
         </header>
 
         <main class="flex-1">

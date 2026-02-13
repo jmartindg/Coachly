@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
 // Client routes (authenticated clients only)
 Route::middleware(['auth', 'client', 'no-cache'])->group(function () {
     Route::get('/client', ClientController::class)->name('client.index');
+    Route::get('/client/profile', [ClientController::class, 'profile'])->name('client.profile');
+    Route::put('/client/profile', [ClientController::class, 'updateProfile'])->name('client.profile.update');
 });
 
 // Coach routes (authenticated coaches only)
