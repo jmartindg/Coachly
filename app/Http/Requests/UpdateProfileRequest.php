@@ -28,6 +28,8 @@ class UpdateProfileRequest extends FormRequest
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->user())],
             'age' => ['nullable', 'integer', 'min:1', 'max:150'],
             'sex' => ['nullable', Rule::enum(Sex::class)],
+            'height' => ['nullable', 'numeric', 'min:100', 'max:250'],
+            'weight' => ['nullable', 'numeric', 'min:30', 'max:300'],
         ];
     }
 }

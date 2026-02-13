@@ -7,6 +7,14 @@
         Sign up to get started with your coaching journey.
     </p>
 
+    <div class="rounded-lg border border-slate-700/80 bg-slate-900/40 px-3 py-2.5 mb-5">
+        <p class="text-xs text-slate-300">
+            <span class="font-medium text-slate-200">Tip:</span> The more details you share, the better your coach can
+            tailor your program. All fields except name, email, and password are optional you can add or update them
+            anytime in your profile.
+        </p>
+    </div>
+
     <form action="{{ route('register') }}" method="POST" class="space-y-4">
         @csrf
 
@@ -74,6 +82,33 @@
                     </svg>
                 </div>
                 @error('sex')
+                    <p class="text-xs text-red-400">{{ $message }}</p>
+                @enderror
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1">
+                <label for="height" class="block text-xs font-medium text-slate-200">
+                    Height (cm)
+                </label>
+                <input type="number" id="height" name="height" value="{{ old('height') }}" min="100"
+                    max="250" step="0.1"
+                    class="block w-full rounded-md border {{ $errors->has('height') ? 'border-red-500' : 'border-slate-700' }} bg-slate-950/60 px-3 py-2 text-sm text-slate-50 placeholder-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                    placeholder="170">
+                @error('height')
+                    <p class="text-xs text-red-400">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="space-y-1">
+                <label for="weight" class="block text-xs font-medium text-slate-200">
+                    Weight (kg)
+                </label>
+                <input type="number" id="weight" name="weight" value="{{ old('weight') }}" min="30"
+                    max="300" step="0.1"
+                    class="block w-full rounded-md border {{ $errors->has('weight') ? 'border-red-500' : 'border-slate-700' }} bg-slate-950/60 px-3 py-2 text-sm text-slate-50 placeholder-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                    placeholder="70">
+                @error('weight')
                     <p class="text-xs text-red-400">{{ $message }}</p>
                 @enderror
             </div>

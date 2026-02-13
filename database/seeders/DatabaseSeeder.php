@@ -20,6 +20,11 @@ class DatabaseSeeder extends Seeder
             'email' => 'client@example.com',
         ]);
 
+        User::factory()->applied()->create([
+            'name' => 'Applied Client',
+            'email' => 'applied@example.com',
+        ]);
+
         User::factory()->coach()->create([
             'name' => 'Coach Lee',
             'email' => 'coachlee@coachly.fit',

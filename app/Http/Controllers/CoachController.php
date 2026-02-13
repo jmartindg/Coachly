@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ClientStatus;
 use App\Enums\Role;
 use App\Models\Blog;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class CoachController extends Controller
@@ -13,12 +15,96 @@ class CoachController extends Controller
     {
         $blogs = Blog::query()->with('user')->latest()->get();
 
-        return view('coach.index', ['blogs' => $blogs]);
+        $stats = [
+            'applied' => User::query()->where('role', Role::Client)->where('client_status', ClientStatus::Applied)->count(),
+            'pending' => User::query()->where('role', Role::Client)->where('client_status', ClientStatus::Pending)->count(),
+            'leads' => User::query()->where('role', Role::Client)->where('client_status', ClientStatus::Lead)->count(),
+            'finished' => User::query()->where('role', Role::Client)->where('client_status', ClientStatus::Finished)->count(),
+        ];
+
+        return view('coach.index', ['blogs' => $blogs, 'stats' => $stats]);
     }
 
     public function clients(): View
     {
-        return view('coach.clients.index');
+        $applied = User::query()
+            ->where('role', Role::Client)
+            ->where('client_status', ClientStatus::Applied)
+            ->orderBy('name')
+            ->get();
+
+        $pending = User::query()
+            ->where('role', Role::Client)
+            ->where('client_status', ClientStatus::Pending)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $leads = User::query()
+            ->where('role', Role::Client)
+            ->where('client_status', ClientStatus::Lead)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $finished = User::query()
+            ->where('role', Role::Client)
+            ->where('client_status', ClientStatus::Finished)
+            ->orderBy('name')
+            ->get();
+
+        $activeTab = request()->query('tab', 'applied');
+        if (! in_array($activeTab, ['applied', 'pending', 'leads', 'finished'])) {
+            $activeTab = 'applied';
+        }
+
+        return view('coach.clients.index', [
+            'applied' => $applied,
+            'pending' => $pending,
+            'leads' => $leads,
+            'finished' => $finished,
+            'activeTab' => $activeTab,
+        ]);
+    }
+
+    public function showClient(User $user): View|RedirectResponse
+    {
+        if ($user->role !== Role::Client) {
+            abort(404);
+        }
+
+        return view('coach.clients.show', ['client' => $user]);
+    }
+
+    public function promoteClient(User $user): RedirectResponse
+    {
+        if ($user->role !== Role::Client || ! in_array($user->client_status, [ClientStatus::Lead, ClientStatus::Pending])) {
+            abort(403);
+        }
+
+        $user->update(['client_status' => ClientStatus::Applied]);
+
+        return redirect()->route('coach.clients')->with('success', "{$user->name} is now an active client.");
+    }
+
+    public function finishClient(User $user): RedirectResponse
+    {
+        if ($user->role !== Role::Client || $user->client_status !== ClientStatus::Applied) {
+            abort(403);
+        }
+
+        $user->update(['client_status' => ClientStatus::Finished]);
+
+        return redirect()->route('coach.clients')->with('success', "{$user->name} has been marked as finished.");
+    }
+
+    public function revertToLead(User $user): RedirectResponse
+    {
+        if ($user->role !== Role::Client || ! in_array($user->client_status, [ClientStatus::Applied, ClientStatus::Pending])) {
+            abort(403);
+        }
+
+        $user->update(['client_status' => ClientStatus::Lead]);
+
+        return redirect()->route('coach.clients')->with('success', "{$user->name} has been moved back to leads.");
     }
 
     public function createBlog(): View

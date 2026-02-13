@@ -13,6 +13,29 @@
             <p class="text-sm text-slate-400">Welcome back, {{ auth()->user()->name }}.</p>
         </section>
 
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <a href="{{ route('coach.clients') }}?tab=applied"
+                class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 hover:border-slate-700 transition-colors">
+                <p class="text-2xl font-bold text-slate-50">{{ $stats['applied'] }}</p>
+                <p class="text-xs text-slate-400 mt-0.5">Active clients</p>
+            </a>
+            <a href="{{ route('coach.clients') }}?tab=pending"
+                class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 hover:border-slate-700 transition-colors">
+                <p class="text-2xl font-bold text-slate-50">{{ $stats['pending'] }}</p>
+                <p class="text-xs text-slate-400 mt-0.5">Pending approval</p>
+            </a>
+            <a href="{{ route('coach.clients') }}?tab=leads"
+                class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 hover:border-slate-700 transition-colors">
+                <p class="text-2xl font-bold text-slate-50">{{ $stats['leads'] }}</p>
+                <p class="text-xs text-slate-400 mt-0.5">Leads</p>
+            </a>
+            <a href="{{ route('coach.clients') }}?tab=finished"
+                class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 hover:border-slate-700 transition-colors">
+                <p class="text-2xl font-bold text-slate-50">{{ $stats['finished'] }}</p>
+                <p class="text-xs text-slate-400 mt-0.5">Finished</p>
+            </a>
+        </section>
+
         <section class="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6 space-y-4">
             <div class="flex items-center justify-between gap-4">
                 <div>

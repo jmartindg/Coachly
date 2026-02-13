@@ -35,6 +35,7 @@ Route::middleware(['auth', 'client', 'no-cache'])->group(function () {
     Route::get('/client', ClientController::class)->name('client.index');
     Route::get('/client/profile', [ClientController::class, 'profile'])->name('client.profile');
     Route::put('/client/profile', [ClientController::class, 'updateProfile'])->name('client.profile.update');
+    Route::post('/client/apply', [ClientController::class, 'apply'])->name('client.apply');
 });
 
 // Coach routes (authenticated coaches only)
@@ -46,4 +47,8 @@ Route::middleware(['auth', 'coach', 'no-cache'])->group(function () {
     Route::delete('/coach/blog/{blog}', [BlogController::class, 'destroy'])->name('coach.blog.destroy');
     Route::post('/coach/blog', [BlogController::class, 'store'])->name('coach.blog.store');
     Route::get('/coach/clients', [CoachController::class, 'clients'])->name('coach.clients');
+    Route::get('/coach/clients/{user}', [CoachController::class, 'showClient'])->name('coach.clients.show');
+    Route::post('/coach/clients/{user}/promote', [CoachController::class, 'promoteClient'])->name('coach.clients.promote');
+    Route::post('/coach/clients/{user}/finish', [CoachController::class, 'finishClient'])->name('coach.clients.finish');
+    Route::post('/coach/clients/{user}/revert', [CoachController::class, 'revertToLead'])->name('coach.clients.revert');
 });

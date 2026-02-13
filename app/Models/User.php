@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ClientStatus;
 use App\Enums\Role;
 use App\Enums\Sex;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -25,8 +26,11 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'client_status',
         'age',
         'sex',
+        'height',
+        'weight',
     ];
 
     /**
@@ -50,6 +54,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => Role::class,
+            'client_status' => ClientStatus::class,
             'sex' => Sex::class,
         ];
     }
@@ -62,6 +67,16 @@ class User extends Authenticatable
     public function isClient(): bool
     {
         return $this->role === Role::Client;
+    }
+
+    public function isLead(): bool
+    {
+        return $this->role === Role::Client && $this->client_status === ClientStatus::Lead;
+    }
+
+    public function isApplied(): bool
+    {
+        return $this->role === Role::Client && $this->client_status === ClientStatus::Applied;
     }
 
     public function blogs(): HasMany

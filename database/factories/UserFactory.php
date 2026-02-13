@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ClientStatus;
 use App\Enums\Role;
 use App\Enums\Sex;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -32,6 +33,7 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             'role' => Role::Client,
+            'client_status' => ClientStatus::Lead,
             'age' => fake()->numberBetween(18, 80),
             'sex' => fake()->randomElement(Sex::cases()),
         ];
@@ -54,6 +56,26 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'role' => Role::Coach,
+        ]);
+    }
+
+    /**
+     * Indicate that the client has applied and is awaiting coach approval.
+     */
+    public function pending(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'client_status' => ClientStatus::Pending,
+        ]);
+    }
+
+    /**
+     * Indicate that the client has been approved/onboarded.
+     */
+    public function applied(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'client_status' => ClientStatus::Applied,
         ]);
     }
 }

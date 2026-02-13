@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\ClientStatus;
 use App\Enums\Role;
 use App\Enums\Sex;
 use App\Http\Controllers\Controller;
@@ -24,6 +25,8 @@ class Register extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users'],
             'age' => ['nullable', 'integer', 'min:1', 'max:150'],
             'sex' => ['nullable', Rule::enum(Sex::class)],
+            'height' => ['nullable', 'numeric', 'min:100', 'max:250'],
+            'weight' => ['nullable', 'numeric', 'min:30', 'max:300'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
@@ -33,8 +36,11 @@ class Register extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role' => Role::Client,
+            'client_status' => ClientStatus::Lead,
             'age' => $validated['age'] ?? null,
             'sex' => array_key_exists('sex', $validated) && $validated['sex'] !== '' ? Sex::from($validated['sex']) : null,
+            'height' => $validated['height'] ?? null,
+            'weight' => $validated['weight'] ?? null,
         ]);
 
         // Login user
