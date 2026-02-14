@@ -1,5 +1,5 @@
 <x-client-layout>
-    <x-slot:title>Edit profile</x-slot:title>
+    <x-slot:title>Edit Profile</x-slot:title>
 
     <div class="space-y-6">
         @if (session('success'))
@@ -9,7 +9,7 @@
         @endif
 
         <section>
-            <h1 class="text-2xl font-semibold tracking-tight text-slate-50">Edit profile</h1>
+            <h1 class="text-2xl font-semibold tracking-tight text-slate-50">Edit Profile</h1>
             <p class="text-sm text-slate-400">Your coach sees this information.</p>
         </section>
 
@@ -45,8 +45,8 @@
                     </div>
                     <div class="space-y-1">
                         <label for="age" class="block text-xs font-medium text-slate-400">Age</label>
-                        <input type="number" id="age" name="age" value="{{ old('age', auth()->user()->age) }}"
-                            min="1" max="150"
+                        <input type="number" id="age" name="age"
+                            value="{{ old('age', auth()->user()->age) }}" min="1" max="150"
                             class="block w-full rounded-md border {{ $errors->has('age') ? 'border-red-500' : 'border-slate-700' }} bg-slate-950/60 px-3 py-2 text-sm text-slate-50 placeholder-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400"
                             placeholder="Optional">
                         @error('age')

@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot:title>Contact</x-slot:title>
-    <div class="max-w-2xl mx-auto space-y-8">
+    <div class="w-full space-y-8">
         <section class="space-y-3">
             <p class="text-xs uppercase tracking-[0.2em] text-emerald-300/80">
                 Contact

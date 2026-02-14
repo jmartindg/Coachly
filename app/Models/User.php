@@ -7,6 +7,7 @@ use App\Enums\Role;
 use App\Enums\Sex;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -82,5 +83,28 @@ class User extends Authenticatable
     public function blogs(): HasMany
     {
         return $this->hasMany(Blog::class);
+    }
+
+    public function programAssignments(): HasMany
+    {
+        return $this->hasMany(ProgramAssignment::class);
+    }
+
+    public function assignedPrograms(): BelongsToMany
+    {
+        return $this->belongsToMany(Program::class, 'program_assignments')
+            ->withPivot('assigned_at')
+            ->withTimestamps();
+    }
+
+    public function currentProgram(): ?Program
+    {
+        $assignment = $this->programAssignments()
+            ->with('program.workouts.exercises')
+            ->orderByDesc('assigned_at')
+            ->orderByDesc('id')
+            ->first();
+
+        return $assignment?->program;
     }
 }

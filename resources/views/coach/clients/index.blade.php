@@ -15,37 +15,25 @@
 
         <div class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden">
             <div class="flex border-b border-slate-800" role="tablist">
-                <input type="radio" name="clients-tab" id="tab-applied"
-                    {{ $activeTab === 'applied' ? 'checked' : '' }} class="peer/tab-applied sr-only"
-                    role="tab" aria-selected="{{ $activeTab === 'applied' }}" aria-controls="panel-applied">
-                <label for="tab-applied"
-                    class="flex-1 cursor-pointer px-5 py-3 text-center text-sm font-medium text-slate-400 transition-colors hover:text-slate-50 peer-checked/tab-applied:border-b-2 peer-checked/tab-applied:border-emerald-500 peer-checked/tab-applied:text-slate-50">
+                <a href="{{ route('coach.clients') }}?tab=applied"
+                    class="flex-1 px-5 py-3 text-center text-sm font-medium transition-colors {{ $activeTab === 'applied' ? 'border-b-2 border-emerald-500 text-slate-50' : 'text-slate-400 hover:text-slate-50' }}">
                     Active ({{ $applied->count() }})
-                </label>
-                <input type="radio" name="clients-tab" id="tab-pending" {{ $activeTab === 'pending' ? 'checked' : '' }}
-                    class="peer/tab-pending sr-only" role="tab" aria-selected="{{ $activeTab === 'pending' }}"
-                    aria-controls="panel-pending">
-                <label for="tab-pending"
-                    class="flex-1 cursor-pointer px-5 py-3 text-center text-sm font-medium text-slate-400 transition-colors hover:text-slate-50 peer-checked/tab-pending:border-b-2 peer-checked/tab-pending:border-emerald-500 peer-checked/tab-pending:text-slate-50">
+                </a>
+                <a href="{{ route('coach.clients') }}?tab=pending"
+                    class="flex-1 px-5 py-3 text-center text-sm font-medium transition-colors {{ $activeTab === 'pending' ? 'border-b-2 border-emerald-500 text-slate-50' : 'text-slate-400 hover:text-slate-50' }}">
                     Pending ({{ $pending->count() }})
-                </label>
-                <input type="radio" name="clients-tab" id="tab-leads" {{ $activeTab === 'leads' ? 'checked' : '' }}
-                    class="peer/tab-leads sr-only" role="tab" aria-selected="{{ $activeTab === 'leads' }}"
-                    aria-controls="panel-leads">
-                <label for="tab-leads"
-                    class="flex-1 cursor-pointer px-5 py-3 text-center text-sm font-medium text-slate-400 transition-colors hover:text-slate-50 peer-checked/tab-leads:border-b-2 peer-checked/tab-leads:border-emerald-500 peer-checked/tab-leads:text-slate-50">
+                </a>
+                <a href="{{ route('coach.clients') }}?tab=leads"
+                    class="flex-1 px-5 py-3 text-center text-sm font-medium transition-colors {{ $activeTab === 'leads' ? 'border-b-2 border-emerald-500 text-slate-50' : 'text-slate-400 hover:text-slate-50' }}">
                     Leads ({{ $leads->count() }})
-                </label>
-                <input type="radio" name="clients-tab" id="tab-finished" {{ $activeTab === 'finished' ? 'checked' : '' }}
-                    class="peer/tab-finished sr-only" role="tab" aria-selected="{{ $activeTab === 'finished' }}"
-                    aria-controls="panel-finished">
-                <label for="tab-finished"
-                    class="flex-1 cursor-pointer px-5 py-3 text-center text-sm font-medium text-slate-400 transition-colors hover:text-slate-50 peer-checked/tab-finished:border-b-2 peer-checked/tab-finished:border-emerald-500 peer-checked/tab-finished:text-slate-50">
+                </a>
+                <a href="{{ route('coach.clients') }}?tab=finished"
+                    class="flex-1 px-5 py-3 text-center text-sm font-medium transition-colors {{ $activeTab === 'finished' ? 'border-b-2 border-emerald-500 text-slate-50' : 'text-slate-400 hover:text-slate-50' }}">
                     Finished ({{ $finished->count() }})
-                </label>
+                </a>
             </div>
 
-            <div id="panel-applied" class="p-5 sm:p-6 space-y-4 {{ $activeTab !== 'applied' ? 'hidden' : '' }}" role="tabpanel">
+            <div id="panel-applied" class="p-5 sm:p-6 space-y-4 {{ $activeTab === 'applied' ? '' : 'hidden' }}" role="tabpanel">
                 <p class="text-xs text-slate-400">Approved clients who are actively coaching.</p>
                 @if ($applied->isNotEmpty())
                     <ul class="space-y-3">
@@ -112,7 +100,7 @@
                 @endif
             </div>
 
-            <div id="panel-pending" class="p-5 sm:p-6 space-y-4 {{ $activeTab !== 'pending' ? 'hidden' : '' }}" role="tabpanel">
+            <div id="panel-pending" class="p-5 sm:p-6 space-y-4 {{ $activeTab === 'pending' ? '' : 'hidden' }}" role="tabpanel">
                 <p class="text-xs text-slate-400">Applications awaiting your approval. Approve or move back to leads.</p>
                 @if ($pending->isNotEmpty())
                     <ul class="space-y-3">
@@ -179,7 +167,7 @@
                 @endif
             </div>
 
-            <div id="panel-leads" class="p-5 sm:p-6 space-y-4 {{ $activeTab !== 'leads' ? 'hidden' : '' }}" role="tabpanel">
+            <div id="panel-leads" class="p-5 sm:p-6 space-y-4 {{ $activeTab === 'leads' ? '' : 'hidden' }}" role="tabpanel">
                 <p class="text-xs text-slate-400">Registered users who haven't applied yet. Or add manually with Mark active.
                 </p>
                 @if ($leads->isNotEmpty())
@@ -239,7 +227,7 @@
                 @endif
             </div>
 
-            <div id="panel-finished" class="p-5 sm:p-6 space-y-4 {{ $activeTab !== 'finished' ? 'hidden' : '' }}" role="tabpanel">
+            <div id="panel-finished" class="p-5 sm:p-6 space-y-4 {{ $activeTab === 'finished' ? '' : 'hidden' }}" role="tabpanel">
                 <p class="text-xs text-slate-400">Clients who have completed their program.</p>
                 @if ($finished->isNotEmpty())
                     <ul class="space-y-3">
@@ -286,15 +274,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.querySelectorAll('input[name="clients-tab"]').forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                document.getElementById('panel-applied').classList.toggle('hidden', e.target.id !== 'tab-applied');
-                document.getElementById('panel-pending').classList.toggle('hidden', e.target.id !== 'tab-pending');
-                document.getElementById('panel-leads').classList.toggle('hidden', e.target.id !== 'tab-leads');
-                document.getElementById('panel-finished').classList.toggle('hidden', e.target.id !== 'tab-finished');
-            });
-        });
-    </script>
 </x-coach-layout>

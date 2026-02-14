@@ -1,12 +1,18 @@
 <x-coach-layout>
-    <x-slot:title>{{ $client->name }}</x-slot:title>
+    <x-slot:title>{{ $client->name }} - Client Details</x-slot:title>
 
     <div class="space-y-6">
+        @if (session('success'))
+            <p class="rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-300">
+                {{ session('success') }}
+            </p>
+        @endif
+
         <div class="flex items-center justify-between gap-4">
             <a href="{{ route('coach.clients') }}"
                 class="text-xs text-slate-400 hover:text-slate-50 transition-colors flex items-center gap-1">
-                <svg class="size-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke-width="2" stroke="currentColor">
+                <svg class="size-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
                 Back to clients
@@ -16,8 +22,8 @@
         <section class="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
             <h1 class="text-xl font-semibold text-slate-50 mb-4">{{ $client->name }}</h1>
             <span
-                class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium {{ match ($client->client_status->value) { 'applied' => 'bg-emerald-500/20 text-emerald-300', 'pending' => 'bg-amber-500/20 text-amber-300', 'finished' => 'bg-slate-500/20 text-slate-300', default => 'bg-slate-500/20 text-slate-400' } }}">
-                {{ match ($client->client_status->value) { 'applied' => 'Active', 'pending' => 'Pending approval', 'finished' => 'Finished', default => 'Lead' } }}
+                class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium {{ match ($client->client_status->value) {'applied' => 'bg-emerald-500/20 text-emerald-300','pending' => 'bg-amber-500/20 text-amber-300','finished' => 'bg-slate-500/20 text-slate-300',default => 'bg-slate-500/20 text-slate-400'} }}">
+                {{ match ($client->client_status->value) {'applied' => 'Active','pending' => 'Pending approval','finished' => 'Finished',default => 'Lead'} }}
             </span>
 
             <dl class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -54,6 +60,56 @@
                     <dd class="text-sm text-slate-50">{{ $client->created_at->format('M j, Y') }}</dd>
                 </div>
             </dl>
+
+            @if ($client->client_status->value === 'finished' && $programHistory->isNotEmpty())
+                <div class="mt-6 pt-6 border-t border-slate-800">
+                    <h3 class="text-sm font-medium text-slate-300 mb-2">Program History</h3>
+                    <ul class="space-y-2">
+                        @foreach ($programHistory as $assignment)
+                            <li
+                                class="flex items-center justify-between gap-4 rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2">
+                                <a href="{{ route('coach.programs.show', $assignment->program) }}"
+                                    class="text-sm text-slate-200 hover:text-slate-50 transition-colors">{{ $assignment->program->name }}</a>
+                                <span
+                                    class="text-xs text-slate-500">{{ $assignment->assigned_at->format('M j, Y') }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if ($client->client_status->value === 'applied' && $programs->isNotEmpty())
+                <div class="mt-6 pt-6 border-t border-slate-800">
+                    <h3 class="text-sm font-medium text-slate-300 mb-2">Assign Program</h3>
+                    @if ($currentProgram)
+                        <p class="text-xs text-slate-400 mb-3">
+                            Current:
+                            <a href="{{ route('coach.programs.show', $currentProgram) }}"
+                                class="text-slate-200 hover:text-slate-50 transition-colors">{{ $currentProgram->name }}</a>
+                        </p>
+                    @endif
+                    <div class="space-y-2">
+                        @foreach ($programs as $program)
+                            @php($isCurrent = $currentProgram?->id === $program->id)
+                            <div
+                                class="flex items-center justify-between gap-4 rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2">
+                                <a href="{{ route('coach.programs.show', $program) }}"
+                                    class="text-sm text-slate-200 hover:text-slate-50 transition-colors">{{ $program->name }}</a>
+                                <form action="{{ route('coach.clients.assign-program', $client) }}" method="POST"
+                                    class="inline">
+                                    @csrf
+                                    <input type="hidden" name="program_id" value="{{ $program->id }}">
+                                    <button type="submit"
+                                        class="inline-flex items-center justify-center rounded-full px-3 py-1.5 text-xs font-medium {{ $isCurrent ? 'border border-slate-600 text-slate-400' : 'bg-emerald-500 text-slate-950 hover:bg-emerald-400' }} transition-colors cursor-pointer"
+                                        {{ $isCurrent ? 'disabled' : '' }}>
+                                        {{ $isCurrent ? 'Current' : 'Assign' }}
+                                    </button>
+                                </form>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
 
             <div class="mt-6 flex gap-3">
                 @if (in_array($client->client_status->value, ['lead', 'pending']))

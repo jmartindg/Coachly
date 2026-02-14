@@ -7,6 +7,7 @@ use App\Enums\Sex;
 use App\Http\Requests\UpdateProfileRequest;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
@@ -16,6 +17,23 @@ class ClientController extends Controller
     public function __invoke(): View
     {
         return view('client.index');
+    }
+
+    public function program(): View|RedirectResponse
+    {
+        $program = Auth::user()->currentProgram();
+
+        if (! $program) {
+            return redirect()->route('client.index')
+                ->with('info', 'You have no program assigned yet. Your coach will assign one when ready.');
+        }
+
+        $program->load(['workouts.exercises']);
+
+        return view('client.program', [
+            'program' => $program,
+            'isFinished' => Auth::user()->client_status === ClientStatus::Finished,
+        ]);
     }
 
     public function profile(): View
@@ -41,7 +59,7 @@ class ClientController extends Controller
 
     public function apply(): RedirectResponse
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         if (! in_array($user->client_status, [ClientStatus::Lead, ClientStatus::Finished])) {
             return redirect()->route('client.index');

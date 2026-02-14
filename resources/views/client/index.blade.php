@@ -7,6 +7,11 @@
                 {{ session('success') }}
             </p>
         @endif
+        @if (session('info'))
+            <p class="rounded-lg border border-slate-600 bg-slate-800/60 px-4 py-2 text-sm text-slate-300">
+                {{ session('info') }}
+            </p>
+        @endif
 
         @php
             $user = auth()->user();
@@ -62,9 +67,17 @@
         @if ($user->client_status->value === 'applied')
             <section class="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-6 sm:p-8">
                 <h2 class="text-base font-semibold text-emerald-300 mb-2">You're an active client</h2>
-                <p class="text-sm text-slate-400">
+                <p class="text-sm text-slate-400 mb-4">
                     Your coach has approved you and is ready to work with you. Keep your profile updated and check back for your program.
                 </p>
+                @if ($user->currentProgram())
+                    <a href="{{ route('client.program') }}"
+                        class="inline-flex items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 transition-colors">
+                        View my program
+                    </a>
+                @else
+                    <p class="text-xs text-slate-500">Your coach will assign your program soon.</p>
+                @endif
             </section>
         @endif
 

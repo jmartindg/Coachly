@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Enums\ClientStatus;
 use App\Enums\Role;
+use App\Http\Requests\AssignProgramRequest;
 use App\Models\Blog;
+use App\Models\Program;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class CoachController extends Controller
@@ -71,7 +74,53 @@ class CoachController extends Controller
             abort(404);
         }
 
-        return view('coach.clients.show', ['client' => $user]);
+        $programs = Program::query()
+            ->where('user_id', Auth::id())
+            ->orderBy('name')
+            ->get();
+
+        $currentProgram = $user->currentProgram();
+
+        $programHistory = $user->programAssignments()
+            ->with('program')
+            ->orderByDesc('assigned_at')
+            ->orderByDesc('id')
+            ->get();
+
+        return view('coach.clients.show', [
+            'client' => $user,
+            'programs' => $programs,
+            'currentProgram' => $currentProgram,
+            'programHistory' => $programHistory,
+        ]);
+    }
+
+    public function assignProgram(AssignProgramRequest $request, User $user): RedirectResponse
+    {
+        if ($user->role !== Role::Client || $user->client_status !== ClientStatus::Applied) {
+            abort(403);
+        }
+
+        $program = Program::findOrFail($request->validated('program_id'));
+        if ($program->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $currentProgram = $user->currentProgram();
+        if ($currentProgram?->id === $program->id) {
+            return redirect()->route('coach.clients.show', $user)
+                ->with('success', "{$user->name} already has {$program->name}.");
+        }
+
+        $user->programAssignments()->create([
+            'program_id' => $program->id,
+            'assigned_at' => now(),
+        ]);
+
+        return redirect()
+            ->route('coach.clients.show', $user)
+            ->with('success', "{$program->name} assigned to {$user->name}.")
+            ->setStatusCode(303);
     }
 
     public function promoteClient(User $user): RedirectResponse

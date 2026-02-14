@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot:title>About</x-slot:title>
-    <div class="max-w-3xl mx-auto space-y-8">
+    <div class="w-full space-y-8">
         <section class="space-y-3">
             <p class="text-xs uppercase tracking-[0.2em] text-emerald-300/80">
                 About Coachly

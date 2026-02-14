@@ -13,7 +13,7 @@
     <div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 flex-1 flex flex-col">
         <header class="mb-8 sm:mb-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div class="flex w-full items-center justify-between gap-4">
-                <div class="flex items-center gap-2">
+                <a href="{{ route('home') }}" class="flex items-center gap-2 hover:opacity-90 transition-opacity">
                     <div
                         class="h-9 w-9 rounded-full bg-linear-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/40 flex items-center justify-center text-slate-950 font-extrabold text-xs">
                         C
@@ -22,7 +22,7 @@
                         <p class="text-sm font-semibold tracking-tight">Coachly Fitness</p>
                         <p class="text-xs text-slate-400">Online strength & lifestyle coaching</p>
                     </div>
-                </div>
+                </a>
 
                 <button type="button"
                     class="shrink-0 inline-flex lg:hidden items-center justify-center rounded-full border border-slate-700 px-2.5 py-1.5 text-xs font-medium text-slate-100 hover:border-slate-300 hover:text-slate-50 transition-colors"

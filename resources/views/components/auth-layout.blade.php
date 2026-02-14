@@ -17,7 +17,7 @@
                     class="h-9 w-9 rounded-full bg-linear-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/40 flex items-center justify-center text-slate-950 font-extrabold text-xs">
                     C
                 </div>
-                <div class="text-center sm:text-left">
+                <div class="text-left">
                     <p class="text-sm font-semibold tracking-tight">Coachly Fitness</p>
                     <p class="text-xs text-slate-400">Online strength & lifestyle coaching</p>
                 </div>
