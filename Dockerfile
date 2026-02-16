@@ -29,8 +29,8 @@ FROM php:8.4-cli-alpine
 
 WORKDIR /var/www/html
 
-RUN apk add --no-cache icu-dev oniguruma-dev sqlite-dev \
-    && docker-php-ext-install intl mbstring pdo pdo_mysql pdo_sqlite
+RUN apk add --no-cache icu-dev oniguruma-dev sqlite-dev postgresql-dev \
+    && docker-php-ext-install intl mbstring pdo pdo_mysql pdo_sqlite pdo_pgsql
 
 COPY . .
 COPY --from=vendor /app/vendor ./vendor
