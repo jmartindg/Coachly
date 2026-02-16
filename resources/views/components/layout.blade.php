@@ -50,13 +50,13 @@
                 <a href="{{ route('contact') }}"
                     class="py-2 lg:py-0 lg:px-2 hover:text-slate-50 transition-colors">Contact</a>
                 <div class="flex flex-col gap-2 mt-3 lg:flex-row lg:mt-0 lg:ml-2">
-                    <a href="{{ route('register') }}"
-                        class="inline-flex shrink-0 w-full items-center justify-center whitespace-nowrap rounded-full border border-slate-600/70 px-3 py-1.5 text-xs font-medium text-slate-100 hover:border-slate-300 hover:text-slate-50 transition-colors lg:w-auto">
-                        Register
-                    </a>
                     <a href="{{ route('login') }}"
                         class="inline-flex shrink-0 w-full items-center justify-center whitespace-nowrap rounded-full border border-slate-600/70 px-3 py-1.5 text-xs font-medium text-slate-100 hover:border-slate-300 hover:text-slate-50 transition-colors lg:w-auto">
                         Login
+                    </a>
+                    <a href="{{ route('register') }}"
+                        class="inline-flex shrink-0 w-full items-center justify-center whitespace-nowrap rounded-full border border-slate-600/70 px-3 py-1.5 text-xs font-medium text-slate-100 hover:border-slate-300 hover:text-slate-50 transition-colors lg:w-auto">
+                        Register
                     </a>
                 </div>
             </nav>

@@ -39,53 +39,41 @@ After running `php artisan migrate:fresh --seed`, use these credentials:
 | Client| client@example.com  | password   |
 | Coach | coachlee@coachly.fit| password   |
 
-## About Laravel
+## Project Feature Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Coachly is an online fitness coaching platform that helps coaches manage clients, programs, and content in one place.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Core Product Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Client onboarding flow** with workout-style selection during application.
+- **Coach dashboard** with a clear view of client progress and status.
+- **Program management** where coaches can build and manage structured training plans.
+- **Workout and exercise management** inside each program for organized delivery.
+- **Blog/content management** so coaches can publish updates and educational posts.
 
-## Learning Laravel
+## Client Experience
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- Apply for coaching and select preferred training styles.
+- View assigned program and training details.
+- Update personal profile information from their account.
+- Re-apply after finishing a coaching cycle.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Coach Experience
 
-## Laravel Sponsors
+- Review new applications and manage client pipeline.
+- Move clients through coaching stages (lead, pending, active, finished).
+- Assign training programs to active clients.
+- View client profile details and preferences.
+- Edit public coaching style cards shown across the website.
+- Mark one coaching style as **Most Popular** with live preview before saving.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Public Website Features
 
-### Premium Partners
+- Home, About, Contact, Programs, and Blog pages.
+- Dynamic Programs section that stays in sync with coach-managed style content.
+- Public blog listing and blog detail pages.
+- Consistent branding and UI across key pages.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Note:** This project is currently a work in progress, and new features are continuously being added.

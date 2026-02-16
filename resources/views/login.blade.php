@@ -43,7 +43,7 @@
         <div class="flex items-center justify-between gap-3">
             <label class="inline-flex items-center gap-2 text-[0.7rem] text-slate-300">
                 <input type="checkbox" name="remember"
-                    class="h-3.5 w-3.5 rounded border-slate-600 bg-slate-950/80 text-emerald-500 focus:ring-emerald-500">
+                    class="h-3.5 w-3.5 rounded border-slate-600 bg-slate-950/80 accent-emerald-500 focus:ring-2 focus:ring-emerald-500/60 focus:ring-offset-0">
                 <span>Remember me</span>
             </label>
 
