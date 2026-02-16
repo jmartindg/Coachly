@@ -34,10 +34,33 @@ composer run dev
 
 After running `php artisan migrate:fresh --seed`, use these credentials:
 
-| Role  | Email               | Password   |
-|-------|---------------------|------------|
-| Client| client@example.com  | password   |
-| Coach | coachlee@coachly.fit| password   |
+| Role   | Email                | Password |
+| ------ | -------------------- | -------- |
+| Client | client@example.com   | password |
+| Coach  | coachlee@coachly.fit | password |
+
+### Render Docker CMD Reference
+
+File reference: [Dockerfile](https://github.com/jmartindg/Coachly/blob/main/Dockerfile)
+
+Current production CMD in `Dockerfile` (migrate only, no seed reset on deploy):
+
+```dockerfile
+CMD ["sh", "-c", "touch database/database.sqlite && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
+```
+
+Backup `Dockerfile` CMD (includes seeding on every deploy):
+
+```dockerfile
+CMD ["sh", "-c", "touch database/database.sqlite && php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
+```
+
+### Production Deployment
+
+- The production app is deployed on **Render**.
+- The production database uses **Neon Postgres**.
+
+**Disclaimer:** This setup runs on free-tier services, so slower response times and cold starts are expected.
 
 ## Project Feature Overview
 
