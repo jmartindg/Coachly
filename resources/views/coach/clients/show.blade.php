@@ -31,6 +31,12 @@
                     <dt class="text-xs text-slate-400">Email</dt>
                     <dd class="text-sm text-slate-50">{{ $client->email }}</dd>
                 </div>
+                @if ($client->mobile_number)
+                    <div>
+                        <dt class="text-xs text-slate-400">Mobile Number</dt>
+                        <dd class="text-sm text-slate-50">{{ $client->mobile_number }}</dd>
+                    </div>
+                @endif
                 @if ($client->age)
                     <div>
                         <dt class="text-xs text-slate-400">Age</dt>
@@ -60,6 +66,20 @@
                     <dd class="text-sm text-slate-50">{{ $client->created_at->format('M j, Y') }}</dd>
                 </div>
             </dl>
+
+            @if (! empty($client->workout_style_preferences))
+                <div class="mt-6 pt-6 border-t border-slate-800">
+                    <h3 class="text-xs text-slate-400 uppercase tracking-[0.2em] mb-2">Preferred workout styles</h3>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach ($client->workoutStylePreferenceLabels() as $styleLabel)
+                            <span
+                                class="inline-flex rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
+                                {{ $styleLabel }}
+                            </span>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
 
             @if ($client->client_status->value === 'finished' && $programHistory->isNotEmpty())
                 <div class="mt-6 pt-6 border-t border-slate-800">

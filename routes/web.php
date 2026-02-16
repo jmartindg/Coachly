@@ -45,6 +45,9 @@ Route::middleware(['auth', 'client', 'no-cache'])->group(function () {
 // Coach routes (authenticated coaches only)
 Route::middleware(['auth', 'coach', 'no-cache'])->group(function () {
     Route::get('/coach', [CoachController::class, 'index'])->name('coach.index');
+    Route::get('/coach/profile', [CoachController::class, 'profile'])->name('coach.profile');
+    Route::put('/coach/profile', [CoachController::class, 'updateProfile'])->name('coach.profile.update');
+    Route::put('/coach/workout-styles', [CoachController::class, 'updateWorkoutStyles'])->name('coach.workout-styles.update');
     Route::get('/coach/blog/create', [CoachController::class, 'createBlog'])->name('coach.blog.create');
     Route::get('/coach/blog/{blog}/edit', [CoachController::class, 'editBlog'])->name('coach.blog.edit');
     Route::put('/coach/blog/{blog}', [BlogController::class, 'update'])->name('coach.blog.update');

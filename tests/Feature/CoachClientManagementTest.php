@@ -1,8 +1,12 @@
 <?php
 
 use App\Enums\ClientStatus;
+use App\Models\Program;
+use App\Models\ProgramAssignment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+
+use function Pest\Laravel\actingAs;
 
 uses(RefreshDatabase::class);
 
@@ -11,7 +15,7 @@ test('coach can view clients page with applied and leads lists', function () {
     $lead = User::factory()->create(['name' => 'Lead User', 'email' => 'lead@example.com']);
     $applied = User::factory()->applied()->create(['name' => 'Applied User', 'email' => 'applied@example.com']);
 
-    $response = $this->actingAs($coach)->get(route('coach.clients'));
+    $response = actingAs($coach)->get(route('coach.clients'));
 
     $response->assertOk();
     $response->assertSee('Lead User');
@@ -23,7 +27,7 @@ test('coach can promote a lead to applied', function () {
     $coach = User::factory()->coach()->create();
     $lead = User::factory()->create(['name' => 'New Lead', 'email' => 'newlead@example.com']);
 
-    $response = $this->actingAs($coach)->post(route('coach.clients.promote', $lead));
+    $response = actingAs($coach)->post(route('coach.clients.promote', $lead));
 
     $response->assertRedirect(route('coach.clients'));
     $response->assertSessionHas('success');
@@ -35,7 +39,7 @@ test('coach cannot promote a user who is already applied', function () {
     $coach = User::factory()->coach()->create();
     $applied = User::factory()->applied()->create();
 
-    $response = $this->actingAs($coach)->post(route('coach.clients.promote', $applied));
+    $response = actingAs($coach)->post(route('coach.clients.promote', $applied));
 
     $response->assertForbidden();
 });
@@ -44,7 +48,7 @@ test('coach can view client detail page', function () {
     $coach = User::factory()->coach()->create();
     $client = User::factory()->applied()->create(['name' => 'Jane Doe', 'email' => 'jane@example.com']);
 
-    $response = $this->actingAs($coach)->get(route('coach.clients.show', $client));
+    $response = actingAs($coach)->get(route('coach.clients.show', $client));
 
     $response->assertOk();
     $response->assertSee('Jane Doe');
@@ -55,7 +59,7 @@ test('coach can approve a pending application', function () {
     $coach = User::factory()->coach()->create();
     $pending = User::factory()->pending()->create(['name' => 'Pending User', 'email' => 'pending@example.com']);
 
-    $response = $this->actingAs($coach)->post(route('coach.clients.promote', $pending));
+    $response = actingAs($coach)->post(route('coach.clients.promote', $pending));
 
     $response->assertRedirect(route('coach.clients'));
     $response->assertSessionHas('success');
@@ -64,16 +68,78 @@ test('coach can approve a pending application', function () {
 });
 
 test('finished client can apply again', function () {
+    /** @var User $client */
     $client = User::factory()->create([
         'name' => 'Finished Client',
         'email' => 'finished@example.com',
         'client_status' => ClientStatus::Finished,
     ]);
 
-    $response = $this->actingAs($client)->post(route('client.apply'));
+    $response = actingAs($client)->post(route('client.apply'), [
+        'workout_style_preferences' => ['foundations', 'online_coaching', 'hybrid_coaching'],
+    ]);
 
     $response->assertRedirect(route('client.index'));
     $response->assertSessionHas('success');
 
     expect($client->fresh()->client_status)->toBe(ClientStatus::Pending);
+    expect($client->fresh()->workout_style_preferences)->toBe(['foundations', 'online_coaching', 'hybrid_coaching']);
+});
+
+test('lead client can apply with workout style preferences', function () {
+    /** @var User $client */
+    $client = User::factory()->create([
+        'client_status' => ClientStatus::Lead,
+    ]);
+
+    $response = actingAs($client)->post(route('client.apply'), [
+        'workout_style_preferences' => ['online_coaching'],
+    ]);
+
+    $response->assertRedirect(route('client.index'));
+    $response->assertSessionHas('success');
+
+    expect($client->fresh()->client_status)->toBe(ClientStatus::Pending);
+    expect($client->fresh()->workout_style_preferences)->toBe(['online_coaching']);
+});
+
+test('client cannot apply with more than three workout styles', function () {
+    /** @var User $client */
+    $client = User::factory()->create([
+        'client_status' => ClientStatus::Lead,
+    ]);
+
+    $response = actingAs($client)->post(route('client.apply'), [
+        'workout_style_preferences' => ['foundations', 'online_coaching', 'hybrid_coaching', 'invalid_style'],
+    ]);
+
+    $response->assertRedirect();
+    $response->assertSessionHasErrors('workout_style_preferences');
+
+    expect($client->fresh()->client_status)->toBe(ClientStatus::Lead);
+});
+
+test('approving a reapplying client does not auto-carry previous program', function () {
+    $coach = User::factory()->coach()->create();
+    $previousProgram = Program::factory()->create(['user_id' => $coach->id, 'name' => 'Previous Program']);
+    $client = User::factory()->create([
+        'client_status' => ClientStatus::Pending,
+    ]);
+
+    ProgramAssignment::query()->create([
+        'user_id' => $client->id,
+        'program_id' => $previousProgram->id,
+        'assigned_at' => now()->subDays(30),
+    ]);
+
+    $response = actingAs($coach)->post(route('coach.clients.promote', $client));
+
+    $response->assertRedirect(route('coach.clients'));
+    $response->assertSessionHas('success');
+
+    $freshClient = $client->fresh();
+    expect($freshClient)->not->toBeNull();
+    expect($freshClient->client_status)->toBe(ClientStatus::Applied);
+    expect($freshClient->last_approved_at)->not->toBeNull();
+    expect($freshClient->currentProgram())->toBeNull();
 });

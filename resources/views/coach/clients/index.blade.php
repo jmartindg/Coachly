@@ -120,6 +120,11 @@
                                             ])->filter()->implode(' · ') }}
                                         </p>
                                     @endif
+                                    @if (! empty($applicant->workout_style_preferences))
+                                        <p class="text-xs text-emerald-300/90 mt-1">
+                                            Prefers: {{ implode(' · ', $applicant->workoutStylePreferenceLabels()) }}
+                                        </p>
+                                    @endif
                                 </div>
                                 <div class="shrink-0 flex items-center gap-3">
                                     <span

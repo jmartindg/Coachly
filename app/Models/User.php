@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Schema;
 
 class User extends Authenticatable
 {
@@ -28,10 +29,13 @@ class User extends Authenticatable
         'password',
         'role',
         'client_status',
+        'last_approved_at',
         'age',
         'sex',
         'height',
         'weight',
+        'mobile_number',
+        'workout_style_preferences',
     ];
 
     /**
@@ -56,8 +60,64 @@ class User extends Authenticatable
             'password' => 'hashed',
             'role' => Role::class,
             'client_status' => ClientStatus::class,
+            'last_approved_at' => 'datetime',
             'sex' => Sex::class,
+            'workout_style_preferences' => 'array',
         ];
+    }
+
+    /**
+     * @return array<string, array{label: string, subtitle: string, description: string, bullets: list<string>, hint: string, is_most_popular: bool}>
+     */
+    public static function workoutStyleOptions(): array
+    {
+        if (! Schema::hasTable('workout_styles')) {
+            return WorkoutStyle::defaultOptions();
+        }
+
+        $styles = WorkoutStyle::query()
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        if ($styles->isEmpty()) {
+            return WorkoutStyle::defaultOptions();
+        }
+
+        return $styles
+            ->mapWithKeys(static fn (WorkoutStyle $style): array => [
+                $style->key => [
+                    'label' => $style->label,
+                    'subtitle' => $style->subtitle,
+                    'description' => $style->description,
+                    'bullets' => $style->bullets ?? [],
+                    'hint' => $style->hint,
+                    'is_most_popular' => (bool) $style->is_most_popular,
+                ],
+            ])
+            ->all();
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function workoutStyleKeys(): array
+    {
+        return array_keys(self::workoutStyleOptions());
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function workoutStylePreferenceLabels(): array
+    {
+        $options = self::workoutStyleOptions();
+
+        return collect($this->workout_style_preferences ?? [])
+            ->map(static fn (string $key): ?string => $options[$key]['label'] ?? null)
+            ->filter()
+            ->values()
+            ->all();
     }
 
     public function isCoach(): bool
@@ -99,11 +159,16 @@ class User extends Authenticatable
 
     public function currentProgram(): ?Program
     {
-        $assignment = $this->programAssignments()
+        $assignmentsQuery = $this->programAssignments()
             ->with('program.workouts.exercises')
             ->orderByDesc('assigned_at')
-            ->orderByDesc('id')
-            ->first();
+            ->orderByDesc('id');
+
+        if ($this->last_approved_at) {
+            $assignmentsQuery->where('assigned_at', '>=', $this->last_approved_at);
+        }
+
+        $assignment = $assignmentsQuery->first();
 
         return $assignment?->program;
     }

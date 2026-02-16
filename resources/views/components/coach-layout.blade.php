@@ -13,7 +13,7 @@
 </head>
 
 <body class="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
-    <div class="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 flex flex-col">
+    <div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 flex-1 flex flex-col">
         <header class="mb-8 sm:mb-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div class="flex w-full items-center justify-between gap-4">
                 <a href="{{ route('coach.index') }}" class="flex items-center gap-2 hover:opacity-90 transition-opacity">
@@ -48,6 +48,8 @@
                     class="whitespace-nowrap py-2 lg:py-0 lg:px-2 hover:text-slate-50 transition-colors">Clients</a>
                 <a href="{{ route('coach.programs') }}"
                     class="whitespace-nowrap py-2 lg:py-0 lg:px-2 hover:text-slate-50 transition-colors">Programs</a>
+                <a href="{{ route('coach.profile') }}"
+                    class="whitespace-nowrap py-2 lg:py-0 lg:px-2 hover:text-slate-50 transition-colors">Profile</a>
                 <form method="POST" action="{{ route('logout') }}"
                     class="mt-3 lg:mt-0 lg:ml-2">
                     @csrf

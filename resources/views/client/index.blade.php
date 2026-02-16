@@ -20,10 +20,21 @@
                 !$user->sex ? 'sex' : null,
                 !$user->height ? 'height' : null,
                 !$user->weight ? 'weight' : null,
-            ])->filter()->values();
+            ])
+                ->filter()
+                ->values();
+            $workoutStyleOptions = \App\Models\User::workoutStyleOptions();
+            $defaultWorkoutStyles = $user->client_status->value === 'finished'
+                ? []
+                : ($user->workout_style_preferences ?? []);
+            $selectedWorkoutStyles = collect(old('workout_style_preferences', $defaultWorkoutStyles))
+                ->filter()
+                ->values()
+                ->all();
         @endphp
         @if ($missing->isNotEmpty())
-            <div class="rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
+            <div
+                class="rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
                 <p class="text-sm text-amber-200">
                     Complete your profile so your coach can personalize your program. Add {{ $missing->implode(', ') }}.
                 </p>
@@ -43,15 +54,14 @@
             <section class="rounded-2xl border border-slate-800 bg-slate-900/50 p-6 sm:p-8">
                 <h2 class="text-base font-semibold text-slate-50 mb-2">Ready to start?</h2>
                 <p class="text-sm text-slate-400 mb-4">
-                    Apply for coaching to become an active client. Your coach will receive your application and get in touch.
+                    Apply for coaching to become an active client. Your coach will receive your application and get in
+                    touch.
                 </p>
-                <form action="{{ route('client.apply') }}" method="POST">
-                    @csrf
-                    <button type="submit"
-                        class="inline-flex items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 transition-colors cursor-pointer">
-                        Apply for coaching
-                    </button>
-                </form>
+                @include('client.partials.apply-form', [
+                    'buttonLabel' => 'Apply for coaching',
+                    'workoutStyleOptions' => $workoutStyleOptions,
+                    'selectedWorkoutStyles' => $selectedWorkoutStyles,
+                ])
             </section>
         @endif
 
@@ -59,7 +69,8 @@
             <section class="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6 sm:p-8">
                 <h2 class="text-base font-semibold text-amber-300 mb-2">Awaiting coach approval</h2>
                 <p class="text-sm text-slate-400">
-                    Your application has been submitted. Your coach will review it and get in touch once you're approved.
+                    Your application has been submitted. Your coach will review it and get in touch once you're
+                    approved.
                 </p>
             </section>
         @endif
@@ -68,7 +79,8 @@
             <section class="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-6 sm:p-8">
                 <h2 class="text-base font-semibold text-emerald-300 mb-2">You're an active client</h2>
                 <p class="text-sm text-slate-400 mb-4">
-                    Your coach has approved you and is ready to work with you. Keep your profile updated and check back for your program.
+                    Your coach has approved you and is ready to work with you. Keep your profile updated and check back
+                    for your program.
                 </p>
                 @if ($user->currentProgram())
                     <a href="{{ route('client.program') }}"
@@ -87,13 +99,11 @@
                 <p class="text-sm text-slate-400 mb-4">
                     You've completed your program. Apply again to start a new coaching cycle.
                 </p>
-                <form action="{{ route('client.apply') }}" method="POST">
-                    @csrf
-                    <button type="submit"
-                        class="inline-flex items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 transition-colors cursor-pointer">
-                        Apply again
-                    </button>
-                </form>
+                @include('client.partials.apply-form', [
+                    'buttonLabel' => 'Apply again',
+                    'workoutStyleOptions' => $workoutStyleOptions,
+                    'selectedWorkoutStyles' => $selectedWorkoutStyles,
+                ])
             </section>
         @endif
 
@@ -101,8 +111,8 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <h2 class="text-base font-semibold text-slate-50">Your profile</h2>
                 <span
-                    class="inline-flex w-fit rounded-full px-3 py-1 text-xs font-medium {{ match ($user->client_status->value) { 'applied' => 'bg-emerald-500/20 text-emerald-300', 'pending' => 'bg-amber-500/20 text-amber-300', 'finished' => 'bg-slate-500/20 text-slate-300', default => 'bg-slate-500/20 text-slate-400' } }}">
-                    {{ match ($user->client_status->value) { 'applied' => 'Active client', 'pending' => 'Awaiting approval', 'finished' => 'Program completed', default => 'On the list' } }}
+                    class="inline-flex w-fit rounded-full px-3 py-1 text-xs font-medium {{ match ($user->client_status->value) {'applied' => 'bg-emerald-500/20 text-emerald-300','pending' => 'bg-amber-500/20 text-amber-300','finished' => 'bg-slate-500/20 text-slate-300',default => 'bg-slate-500/20 text-slate-400'} }}">
+                    {{ match ($user->client_status->value) {'applied' => 'Active client','pending' => 'Awaiting approval','finished' => 'Program completed',default => 'On the list'} }}
                 </span>
             </div>
 
@@ -115,6 +125,12 @@
                     <dt class="text-xs font-medium text-slate-500 uppercase tracking-wider">Email</dt>
                     <dd class="mt-0.5 text-sm text-slate-50">{{ $user->email }}</dd>
                 </div>
+                @if ($user->mobile_number)
+                    <div>
+                        <dt class="text-xs font-medium text-slate-500 uppercase tracking-wider">Mobile Number</dt>
+                        <dd class="mt-0.5 text-sm text-slate-50">{{ $user->mobile_number }}</dd>
+                    </div>
+                @endif
                 @if ($user->age)
                     <div>
                         <dt class="text-xs font-medium text-slate-500 uppercase tracking-wider">Age</dt>

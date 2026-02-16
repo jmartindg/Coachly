@@ -1,4 +1,4 @@
-<x-client-layout>
+<x-coach-layout>
     <x-slot:title>Edit Profile</x-slot:title>
 
     <div class="space-y-6">
@@ -10,11 +10,11 @@
 
         <section>
             <h1 class="text-2xl font-semibold tracking-tight text-slate-50">Edit Profile</h1>
-            <p class="text-sm text-slate-400">Your coach sees this information.</p>
+            <p class="text-sm text-slate-400">Keep your coaching profile details up to date.</p>
         </section>
 
         <section class="rounded-2xl border border-slate-800 bg-slate-900/50 p-6 sm:p-8">
-            <form action="{{ route('client.profile.update') }}" method="POST" class="space-y-4">
+            <form action="{{ route('coach.profile.update') }}" method="POST" class="space-y-4">
                 @csrf
                 @method('PUT')
 
@@ -114,7 +114,7 @@
                         class="inline-flex items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 transition-colors cursor-pointer">
                         Save
                     </button>
-                    <a href="{{ route('client.index') }}"
+                    <a href="{{ route('coach.index') }}"
                         class="inline-flex items-center justify-center rounded-full border border-slate-600 px-4 py-2 text-sm font-medium text-slate-300 hover:border-slate-500 hover:text-slate-50 transition-colors">
                         Cancel
                     </a>
@@ -122,4 +122,4 @@
             </form>
         </section>
     </div>
-</x-client-layout>
+</x-coach-layout>

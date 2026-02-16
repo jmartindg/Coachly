@@ -30,6 +30,7 @@ class UpdateProfileRequest extends FormRequest
             'sex' => ['nullable', Rule::enum(Sex::class)],
             'height' => ['nullable', 'numeric', 'min:100', 'max:250'],
             'weight' => ['nullable', 'numeric', 'min:30', 'max:300'],
+            'mobile_number' => ['nullable', 'string', 'max:25', 'regex:/^\+?[0-9\s\-()]{7,25}$/'],
         ];
     }
 }

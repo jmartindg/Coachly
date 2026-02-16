@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ClientStatus;
 use App\Enums\Sex;
+use App\Http\Requests\ApplyForCoachingRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -52,12 +53,13 @@ class ClientController extends Controller
             'sex' => array_key_exists('sex', $validated) && $validated['sex'] !== '' ? Sex::from($validated['sex']) : null,
             'height' => $validated['height'] ?? null,
             'weight' => $validated['weight'] ?? null,
+            'mobile_number' => $validated['mobile_number'] ?? null,
         ]);
 
         return redirect()->route('client.index')->with('success', 'Profile updated successfully.');
     }
 
-    public function apply(): RedirectResponse
+    public function apply(ApplyForCoachingRequest $request): RedirectResponse
     {
         $user = Auth::user();
 
@@ -66,7 +68,12 @@ class ClientController extends Controller
         }
 
         $isReapply = $user->client_status === ClientStatus::Finished;
-        $user->update(['client_status' => ClientStatus::Pending]);
+        $validated = $request->validated();
+
+        $user->update([
+            'client_status' => ClientStatus::Pending,
+            'workout_style_preferences' => $validated['workout_style_preferences'],
+        ]);
 
         $message = $isReapply
             ? 'You have applied again. Your coach will review and get in touch.'

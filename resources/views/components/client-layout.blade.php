@@ -13,7 +13,7 @@
 </head>
 
 <body class="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
-    <div class="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 flex flex-col">
+    <div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 flex-1 flex flex-col">
         <header class="mb-8 sm:mb-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div class="flex w-full items-center justify-between gap-4">
                 <a href="{{ route('client.index') }}" class="flex items-center gap-2 hover:opacity-90 transition-opacity">

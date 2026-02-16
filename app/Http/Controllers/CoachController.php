@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Enums\ClientStatus;
 use App\Enums\Role;
+use App\Enums\Sex;
 use App\Http\Requests\AssignProgramRequest;
+use App\Http\Requests\UpdateProfileRequest;
+use App\Http\Requests\UpdateWorkoutStylesRequest;
 use App\Models\Blog;
 use App\Models\Program;
 use App\Models\User;
+use App\Models\WorkoutStyle;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class CoachController extends Controller
@@ -17,6 +22,10 @@ class CoachController extends Controller
     public function index(): View
     {
         $blogs = Blog::query()->with('user')->latest()->get();
+        $workoutStyles = WorkoutStyle::query()
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
 
         $stats = [
             'applied' => User::query()->where('role', Role::Client)->where('client_status', ClientStatus::Applied)->count(),
@@ -25,7 +34,55 @@ class CoachController extends Controller
             'finished' => User::query()->where('role', Role::Client)->where('client_status', ClientStatus::Finished)->count(),
         ];
 
-        return view('coach.index', ['blogs' => $blogs, 'stats' => $stats]);
+        return view('coach.index', [
+            'blogs' => $blogs,
+            'stats' => $stats,
+            'workoutStyles' => $workoutStyles,
+        ]);
+    }
+
+    public function updateWorkoutStyles(UpdateWorkoutStylesRequest $request): RedirectResponse
+    {
+        $stylesPayload = $request->validated('styles');
+        $popularStyleId = $request->validated('popular_style_id');
+        $styles = WorkoutStyle::query()
+            ->whereIn('id', array_map('intval', array_keys($stylesPayload)))
+            ->get()
+            ->keyBy('id');
+
+        DB::transaction(function () use ($stylesPayload, $styles, $popularStyleId): void {
+            foreach ($stylesPayload as $styleId => $styleData) {
+                $style = $styles->get((int) $styleId);
+
+                if (! $style) {
+                    continue;
+                }
+
+                $style->update([
+                    'label' => $styleData['label'],
+                    'subtitle' => $styleData['subtitle'],
+                    'description' => $styleData['description'],
+                    'hint' => $styleData['hint'],
+                    'bullets' => collect(preg_split('/\r\n|\r|\n/', $styleData['bullets_text'] ?? ''))
+                        ->map(static fn (string $line): string => trim($line))
+                        ->filter()
+                        ->values()
+                        ->all(),
+                ]);
+            }
+
+            WorkoutStyle::query()->update(['is_most_popular' => false]);
+
+            if ($popularStyleId) {
+                WorkoutStyle::query()
+                    ->whereKey((int) $popularStyleId)
+                    ->update(['is_most_popular' => true]);
+            }
+        });
+
+        return redirect()
+            ->route('coach.index')
+            ->with('success', 'Program styles updated successfully.');
     }
 
     public function clients(): View
@@ -129,7 +186,10 @@ class CoachController extends Controller
             abort(403);
         }
 
-        $user->update(['client_status' => ClientStatus::Applied]);
+        $user->update([
+            'client_status' => ClientStatus::Applied,
+            'last_approved_at' => now(),
+        ]);
 
         return redirect()->route('coach.clients')->with('success', "{$user->name} is now an active client.");
     }
@@ -168,5 +228,28 @@ class CoachController extends Controller
         $coaches = User::query()->where('role', Role::Coach)->orderBy('name')->get();
 
         return view('coach.blog.edit', ['blog' => $blog, 'coaches' => $coaches]);
+    }
+
+    public function profile(): View
+    {
+        return view('coach.profile');
+    }
+
+    public function updateProfile(UpdateProfileRequest $request): RedirectResponse
+    {
+        $user = $request->user();
+        $validated = $request->validated();
+
+        $user->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'age' => $validated['age'] ?? null,
+            'sex' => array_key_exists('sex', $validated) && $validated['sex'] !== '' ? Sex::from($validated['sex']) : null,
+            'height' => $validated['height'] ?? null,
+            'weight' => $validated['weight'] ?? null,
+            'mobile_number' => $validated['mobile_number'] ?? null,
+        ]);
+
+        return redirect()->route('coach.index')->with('success', 'Profile updated successfully.');
     }
 }
