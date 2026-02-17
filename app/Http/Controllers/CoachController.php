@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Models\WorkoutStyle;
 use App\Notifications\ApplicationApprovedNotification;
 use App\Notifications\CoachingFinishedNotification;
+use App\Notifications\ProgramAssignedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -175,6 +176,10 @@ class CoachController extends Controller
             'program_id' => $program->id,
             'assigned_at' => now(),
         ]);
+
+        /** @var User $coach */
+        $coach = Auth::user();
+        $user->notify(new ProgramAssignedNotification($coach, $program));
 
         return redirect()
             ->route('coach.clients.show', $user)

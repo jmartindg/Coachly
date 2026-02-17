@@ -13,36 +13,36 @@
             </a>
         </div>
 
-        @if ($notifications->isEmpty())
-            <div class="rounded-xl border border-slate-800 bg-slate-950/60 p-6 text-center">
-                <p class="text-sm text-slate-400">No notifications yet.</p>
-            </div>
-        @else
-            <ul class="overflow-hidden rounded-xl border border-slate-800 bg-slate-950/60">
-                @foreach ($notifications as $notification)
-                    @php($payload = is_array($notification->data) ? $notification->data : [])
-                    @php($notificationUrl = $payload['url'] ?? '#')
-                    @php($notificationTitle = $payload['title'] ?? 'Notification')
-                    @php($notificationMessage = $payload['message'] ?? 'You have a new update.')
+        <div data-notification-page-empty
+            class="rounded-xl border border-slate-800 bg-slate-950/60 p-6 text-center {{ $notifications->isEmpty() ? '' : 'hidden' }}">
+            <p class="text-sm text-slate-400">No notifications yet.</p>
+        </div>
 
-                    <li data-notification-item class="border-b border-slate-800 last:border-b-0">
-                        <a data-notification-link data-notification-id="{{ $notification->id }}" href="{{ $notificationUrl }}"
-                            class="flex items-start gap-3 px-4 py-3 transition-colors hover:bg-slate-800/60 {{ is_null($notification->read_at) ? 'bg-slate-800/30' : '' }}">
-                            <span data-notification-item-unread
-                                class="mt-1.5 inline-block h-2 w-2 shrink-0 rounded-full bg-emerald-400 {{ is_null($notification->read_at) ? '' : 'hidden' }}"></span>
-                            <span class="min-w-0 flex-1">
-                                <span class="block text-xs font-semibold text-slate-100">{{ $notificationTitle }}</span>
-                                <span class="mt-0.5 block text-xs text-slate-400">{{ $notificationMessage }}</span>
-                                <span class="mt-1 block text-[0.65rem] text-slate-500">{{ $notification->created_at?->diffForHumans() }}</span>
-                            </span>
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
+        <ul data-notification-page-list
+            class="overflow-hidden rounded-xl border border-slate-800 bg-slate-950/60 {{ $notifications->isEmpty() ? 'hidden' : '' }}">
+            @foreach ($notifications as $notification)
+                @php($payload = is_array($notification->data) ? $notification->data : [])
+                @php($notificationUrl = $payload['url'] ?? '#')
+                @php($notificationTitle = $payload['title'] ?? 'Notification')
+                @php($notificationMessage = $payload['message'] ?? 'You have a new update.')
 
-            <div class="mt-4">
-                {{ $notifications->links() }}
-            </div>
-        @endif
+                <li data-notification-item class="border-b border-slate-800 last:border-b-0">
+                    <a data-notification-link data-notification-id="{{ $notification->id }}" href="{{ $notificationUrl }}"
+                        class="flex items-start gap-3 px-4 py-3 transition-colors hover:bg-slate-800/60 {{ is_null($notification->read_at) ? 'bg-slate-800/30' : '' }}">
+                        <span data-notification-item-unread
+                            class="mt-1.5 inline-block h-2 w-2 shrink-0 rounded-full bg-emerald-400 {{ is_null($notification->read_at) ? '' : 'hidden' }}"></span>
+                        <span class="min-w-0 flex-1">
+                            <span class="block text-xs font-semibold text-slate-100">{{ $notificationTitle }}</span>
+                            <span class="mt-0.5 block text-xs text-slate-400">{{ $notificationMessage }}</span>
+                            <span class="mt-1 block text-[0.65rem] text-slate-500">{{ $notification->created_at?->diffForHumans() }}</span>
+                        </span>
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+
+        <div data-notification-page-pagination class="mt-4 {{ $notifications->isEmpty() ? 'hidden' : '' }}">
+            {{ $notifications->links() }}
+        </div>
     </section>
 </x-dynamic-component>

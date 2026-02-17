@@ -4,7 +4,9 @@ use App\Models\Program;
 use App\Models\ProgramAssignment;
 use App\Models\User;
 use App\Models\Workout;
+use App\Notifications\ProgramAssignedNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 
 uses(RefreshDatabase::class);
 
@@ -88,6 +90,8 @@ test('coach can add exercise to workout', function () {
 });
 
 test('coach can assign program to active client', function () {
+    Notification::fake();
+
     $coach = User::factory()->coach()->create();
     $program = Program::factory()->create(['user_id' => $coach->id]);
     $client = User::factory()->applied()->create();
@@ -100,6 +104,7 @@ test('coach can assign program to active client', function () {
     $response->assertSessionHas('success');
 
     expect($client->currentProgram()->id)->toBe($program->id);
+    Notification::assertSentTo($client, ProgramAssignedNotification::class);
 });
 
 test('coach cannot assign program to non-applied client', function () {

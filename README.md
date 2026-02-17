@@ -30,6 +30,39 @@ php artisan migrate:fresh --seed
 composer run dev
 ```
 
+### Realtime Notifications (Pusher)
+
+Coachly uses **Pusher Channels** for realtime notification delivery.
+
+1. Create a **Channels** app in Pusher (not Beams).
+2. Add your credentials to `.env`:
+
+```ini
+BROADCAST_CONNECTION=pusher
+
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
+PUSHER_HOST=
+PUSHER_PORT=443
+PUSHER_SCHEME=https
+PUSHER_APP_CLUSTER=ap1
+
+VITE_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+VITE_PUSHER_HOST="${PUSHER_HOST}"
+VITE_PUSHER_PORT="${PUSHER_PORT}"
+VITE_PUSHER_SCHEME="${PUSHER_SCHEME}"
+VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+```
+
+3. Clear cached config after updating env values:
+
+```bash
+php artisan config:clear
+```
+
+`composer run dev` already runs the app server, queue worker, logs, and Vite.
+
 ### Test Users
 
 After running `php artisan migrate:fresh --seed`, use these credentials:

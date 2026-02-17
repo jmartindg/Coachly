@@ -181,6 +181,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const panelElement = document.querySelector('[data-notification-panel]');
     const listElement = panelElement?.querySelector('[data-notification-list]');
     const emptyElement = panelElement?.querySelector('[data-notification-empty]');
+    const pageListElement = document.querySelector('[data-notification-page-list]');
+    const pageEmptyElement = document.querySelector('[data-notification-page-empty]');
+    const pagePaginationElement = document.querySelector('[data-notification-page-pagination]');
 
     if (!authUserId) {
         return;
@@ -281,6 +284,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        if (notification?.id && listElement.querySelector(`[data-notification-link][data-notification-id="${notification.id}"]`)) {
+            return;
+        }
+
         const item = document.createElement('li');
         item.setAttribute('data-notification-item', '');
 
@@ -322,6 +329,56 @@ document.addEventListener('DOMContentLoaded', () => {
         while (listElement.children.length > 10) {
             listElement.removeChild(listElement.lastElementChild);
         }
+    };
+
+    const prependNotificationToPage = (notification) => {
+        if (!pageListElement || !pageEmptyElement) {
+            return;
+        }
+
+        if (notification?.id && pageListElement.querySelector(`[data-notification-link][data-notification-id="${notification.id}"]`)) {
+            return;
+        }
+
+        const item = document.createElement('li');
+        item.setAttribute('data-notification-item', '');
+        item.className = 'border-b border-slate-800 last:border-b-0';
+
+        const link = document.createElement('a');
+        link.href = notification?.url ?? '#';
+        link.dataset.notificationLink = '';
+        if (notification?.id) {
+            link.dataset.notificationId = notification.id;
+        }
+        link.className = 'flex items-start gap-3 px-4 py-3 transition-colors hover:bg-slate-800/60 bg-slate-800/30';
+
+        const unreadDot = document.createElement('span');
+        unreadDot.setAttribute('data-notification-item-unread', '');
+        unreadDot.className = 'mt-1.5 inline-block h-2 w-2 shrink-0 rounded-full bg-emerald-400';
+
+        const content = document.createElement('span');
+        content.className = 'min-w-0 flex-1';
+
+        const title = document.createElement('span');
+        title.className = 'block text-xs font-semibold text-slate-100';
+        title.textContent = notification?.title ?? 'Notification';
+
+        const message = document.createElement('span');
+        message.className = 'mt-0.5 block text-xs text-slate-400';
+        message.textContent = notification?.message ?? 'You have a new update.';
+
+        const time = document.createElement('span');
+        time.className = 'mt-1 block text-[0.65rem] text-slate-500';
+        time.textContent = formatTimestamp(notification?.created_at);
+
+        content.append(title, message, time);
+        link.append(unreadDot, content);
+        item.append(link);
+
+        pageListElement.prepend(item);
+        pageListElement.classList.remove('hidden');
+        pageEmptyElement.classList.add('hidden');
+        pagePaginationElement?.classList.add('hidden');
     };
 
     renderBadges();
@@ -379,5 +436,6 @@ document.addEventListener('DOMContentLoaded', () => {
             unreadCount += 1;
             renderBadges();
             prependNotification(notification);
+            prependNotificationToPage(notification);
         });
 });
