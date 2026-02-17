@@ -1,17 +1,19 @@
 <x-layout>
     <x-slot:title>Blog</x-slot:title>
-    <div class="flex-1 w-full flex flex-col justify-start space-y-8">
-        <section class="space-y-3">
-            <p class="text-xs uppercase tracking-[0.2em] text-emerald-300/80">
-                Blog
-            </p>
-            <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-50">
-                Coaching insights you can actually apply.
-            </h1>
-            <p class="text-sm sm:text-base text-slate-300">
-                Practical tips on training, nutrition, and consistency to help you keep progressing week after week.
-            </p>
-        </section>
+    <div class="flex-1 w-full flex flex-col {{ $blogs->isNotEmpty() ? 'justify-start space-y-8' : 'justify-center items-center' }}">
+        @if ($blogs->isNotEmpty())
+            <section class="space-y-3">
+                <p class="text-xs uppercase tracking-[0.2em] text-emerald-300/80">
+                    Blog
+                </p>
+                <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-50">
+                    Coaching insights you can actually apply.
+                </h1>
+                <p class="text-sm sm:text-base text-slate-300">
+                    Practical tips on training, nutrition, and consistency to help you keep progressing week after week.
+                </p>
+            </section>
+        @endif
 
         @if ($blogs->isNotEmpty())
             <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
