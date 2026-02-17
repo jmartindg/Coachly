@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ClientStatus;
+use App\Enums\Role;
 use App\Enums\Sex;
 use App\Http\Requests\ApplyForCoachingRequest;
 use App\Http\Requests\UpdateProfileRequest;
+use App\Models\User;
+use App\Notifications\ApplicationSubmittedNotification;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -74,6 +77,13 @@ class ClientController extends Controller
             'client_status' => ClientStatus::Pending,
             'workout_style_preferences' => $validated['workout_style_preferences'],
         ]);
+
+        User::query()
+            ->where('role', Role::Coach)
+            ->get()
+            ->each(function (User $coach) use ($user, $isReapply): void {
+                $coach->notify(new ApplicationSubmittedNotification($user, $isReapply));
+            });
 
         $message = $isReapply
             ? 'You have applied again. Your coach will review and get in touch.'

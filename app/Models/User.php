@@ -9,6 +9,7 @@ use App\Enums\Sex;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Schema;
@@ -148,6 +149,11 @@ class User extends Authenticatable
     public function programAssignments(): HasMany
     {
         return $this->hasMany(ProgramAssignment::class);
+    }
+
+    public function appNotifications(): MorphMany
+    {
+        return $this->morphMany(Notification::class, 'notifiable');
     }
 
     public function assignedPrograms(): BelongsToMany

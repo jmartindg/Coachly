@@ -10,6 +10,7 @@ use App\Http\Controllers\Coach\ProgramController;
 use App\Http\Controllers\Coach\WorkoutController;
 use App\Http\Controllers\CoachController;
 use App\Http\Controllers\GuestPageController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 // Guest routes
@@ -31,6 +32,8 @@ Route::middleware('guest')->group(function () {
 });
 Route::middleware('auth')->group(function () {
     Route::post('/logout', Logout::class)->name('logout');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 });
 
 // Client routes (authenticated clients only)

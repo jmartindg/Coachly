@@ -4,7 +4,11 @@ use App\Enums\ClientStatus;
 use App\Models\Program;
 use App\Models\ProgramAssignment;
 use App\Models\User;
+use App\Notifications\ApplicationApprovedNotification;
+use App\Notifications\ApplicationSubmittedNotification;
+use App\Notifications\CoachingFinishedNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 
 use function Pest\Laravel\actingAs;
 
@@ -55,7 +59,24 @@ test('coach can view client detail page', function () {
     $response->assertSee('jane@example.com');
 });
 
+test('coach marking client as finished sends a notification', function () {
+    Notification::fake();
+
+    $coach = User::factory()->coach()->create();
+    $applied = User::factory()->applied()->create();
+
+    $response = actingAs($coach)->post(route('coach.clients.finish', $applied));
+
+    $response->assertRedirect(route('coach.clients'));
+    $response->assertSessionHas('success');
+
+    expect($applied->fresh()->client_status)->toBe(ClientStatus::Finished);
+    Notification::assertSentTo($applied, CoachingFinishedNotification::class);
+});
+
 test('coach can approve a pending application', function () {
+    Notification::fake();
+
     $coach = User::factory()->coach()->create();
     $pending = User::factory()->pending()->create(['name' => 'Pending User', 'email' => 'pending@example.com']);
 
@@ -65,6 +86,7 @@ test('coach can approve a pending application', function () {
     $response->assertSessionHas('success');
 
     expect($pending->fresh()->client_status)->toBe(ClientStatus::Applied);
+    Notification::assertSentTo($pending, ApplicationApprovedNotification::class);
 });
 
 test('finished client can apply again', function () {
@@ -87,6 +109,10 @@ test('finished client can apply again', function () {
 });
 
 test('lead client can apply with workout style preferences', function () {
+    Notification::fake();
+
+    $coach = User::factory()->coach()->create();
+
     /** @var User $client */
     $client = User::factory()->create([
         'client_status' => ClientStatus::Lead,
@@ -101,6 +127,7 @@ test('lead client can apply with workout style preferences', function () {
 
     expect($client->fresh()->client_status)->toBe(ClientStatus::Pending);
     expect($client->fresh()->workout_style_preferences)->toBe(['online_coaching']);
+    Notification::assertSentTo($coach, ApplicationSubmittedNotification::class);
 });
 
 test('client cannot apply with more than three workout styles', function () {

@@ -12,6 +12,8 @@ use App\Models\Blog;
 use App\Models\Program;
 use App\Models\User;
 use App\Models\WorkoutStyle;
+use App\Notifications\ApplicationApprovedNotification;
+use App\Notifications\CoachingFinishedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -186,10 +188,15 @@ class CoachController extends Controller
             abort(403);
         }
 
+        /** @var User $coach */
+        $coach = Auth::user();
+
         $user->update([
             'client_status' => ClientStatus::Applied,
             'last_approved_at' => now(),
         ]);
+
+        $user->notify(new ApplicationApprovedNotification($coach));
 
         return redirect()->route('coach.clients')->with('success', "{$user->name} is now an active client.");
     }
@@ -200,7 +207,11 @@ class CoachController extends Controller
             abort(403);
         }
 
+        /** @var User $coach */
+        $coach = Auth::user();
+
         $user->update(['client_status' => ClientStatus::Finished]);
+        $user->notify(new CoachingFinishedNotification($coach));
 
         return redirect()->route('coach.clients')->with('success', "{$user->name} has been marked as finished.");
     }

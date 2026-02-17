@@ -173,3 +173,211 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updatePopularPreview();
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const { authUserId, unreadNotificationsCount, notificationReadUrlTemplate } = document.body.dataset;
+    const badgeElements = document.querySelectorAll('[data-notification-badge]');
+    const triggerElements = document.querySelectorAll('[data-notification-trigger]');
+    const panelElement = document.querySelector('[data-notification-panel]');
+    const listElement = panelElement?.querySelector('[data-notification-list]');
+    const emptyElement = panelElement?.querySelector('[data-notification-empty]');
+
+    if (!authUserId) {
+        return;
+    }
+
+    let unreadCount = Number.parseInt(unreadNotificationsCount ?? '0', 10);
+
+    if (Number.isNaN(unreadCount) || unreadCount < 0) {
+        unreadCount = 0;
+    }
+
+    const renderBadges = () => {
+        badgeElements.forEach((badgeElement) => {
+            badgeElement.classList.toggle('hidden', unreadCount < 1);
+        });
+    };
+
+    const setTriggersExpanded = (isExpanded) => {
+        triggerElements.forEach((triggerElement) => {
+            triggerElement.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+        });
+    };
+
+    const openPanel = () => {
+        panelElement.classList.remove('hidden');
+        setTriggersExpanded(true);
+    };
+
+    const closePanel = () => {
+        panelElement.classList.add('hidden');
+        setTriggersExpanded(false);
+    };
+
+    const togglePanel = () => {
+        if (panelElement.classList.contains('hidden')) {
+            openPanel();
+            return;
+        }
+
+        closePanel();
+    };
+
+    const formatTimestamp = (value) => {
+        if (!value) {
+            return 'Just now';
+        }
+
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return 'Just now';
+        }
+
+        return date.toLocaleString([], {
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+        });
+    };
+
+    const markNotificationElementAsRead = (notificationLink) => {
+        const unreadDot = notificationLink.querySelector('[data-notification-item-unread]');
+        const wasUnread = unreadDot ? !unreadDot.classList.contains('hidden') : false;
+
+        notificationLink.classList.remove('bg-slate-800/30');
+        unreadDot?.classList.add('hidden');
+
+        return wasUnread;
+    };
+
+    const markNotificationAsRead = async (notificationId, notificationLink) => {
+        if (!notificationReadUrlTemplate || !notificationId) {
+            return;
+        }
+
+        const url = notificationReadUrlTemplate.replace('__ID__', notificationId);
+
+        try {
+            const response = await window.axios.post(url);
+            const nextUnreadCount = response?.data?.unread_count;
+
+            const wasUnread = markNotificationElementAsRead(notificationLink);
+
+            if (Number.isInteger(nextUnreadCount)) {
+                unreadCount = Math.max(0, nextUnreadCount);
+            } else if (wasUnread && unreadCount > 0) {
+                unreadCount -= 1;
+            }
+
+            renderBadges();
+        } catch (error) {
+            // Keep navigation flowing even if mark-read API fails.
+        }
+    };
+
+    const prependNotification = (notification) => {
+        if (!listElement || !emptyElement) {
+            return;
+        }
+
+        const item = document.createElement('li');
+        item.setAttribute('data-notification-item', '');
+
+        const link = document.createElement('a');
+        link.href = notification?.url ?? '#';
+        link.dataset.notificationLink = '';
+        if (notification?.id) {
+            link.dataset.notificationId = notification.id;
+        }
+        link.className = 'flex items-start gap-3 px-4 py-3 transition-colors hover:bg-slate-800/60 bg-slate-800/30';
+
+        const unreadDot = document.createElement('span');
+        unreadDot.setAttribute('data-notification-item-unread', '');
+        unreadDot.className = 'mt-1.5 inline-block h-2 w-2 shrink-0 rounded-full bg-emerald-400';
+
+        const content = document.createElement('span');
+        content.className = 'min-w-0 flex-1';
+
+        const title = document.createElement('span');
+        title.className = 'block text-xs font-semibold text-slate-100';
+        title.textContent = notification?.title ?? 'Notification';
+
+        const message = document.createElement('span');
+        message.className = 'mt-0.5 block text-xs text-slate-400';
+        message.textContent = notification?.message ?? 'You have a new update.';
+
+        const time = document.createElement('span');
+        time.className = 'mt-1 block text-[0.65rem] text-slate-500';
+        time.textContent = formatTimestamp(notification?.created_at);
+
+        content.append(title, message, time);
+        link.append(unreadDot, content);
+        item.append(link);
+
+        listElement.prepend(item);
+        listElement.classList.remove('hidden');
+        emptyElement.classList.add('hidden');
+
+        while (listElement.children.length > 10) {
+            listElement.removeChild(listElement.lastElementChild);
+        }
+    };
+
+    renderBadges();
+
+    if (panelElement && triggerElements.length > 0) {
+        setTriggersExpanded(false);
+
+        triggerElements.forEach((triggerElement) => {
+            triggerElement.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                togglePanel();
+            });
+        });
+
+        document.addEventListener('click', (event) => {
+            const clickedInsidePanel = panelElement.contains(event.target);
+            const clickedTrigger = event.target.closest('[data-notification-trigger]');
+
+            if (!clickedInsidePanel && !clickedTrigger) {
+                closePanel();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closePanel();
+            }
+        });
+    }
+
+    document.addEventListener('click', async (event) => {
+        const notificationLink = event.target.closest('[data-notification-link]');
+
+        if (!notificationLink) {
+            return;
+        }
+
+        const destination = notificationLink.getAttribute('href') ?? '#';
+        const notificationId = notificationLink.dataset.notificationId;
+
+        event.preventDefault();
+        await markNotificationAsRead(notificationId, notificationLink);
+
+        if (destination && destination !== '#') {
+            window.location.assign(destination);
+        }
+    }, true);
+
+    if (!window.Echo || badgeElements.length === 0) {
+        return;
+    }
+
+    window.Echo.private(`App.Models.User.${authUserId}`).notification((notification) => {
+            unreadCount += 1;
+            renderBadges();
+            prependNotification(notification);
+        });
+});

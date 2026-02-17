@@ -12,9 +12,15 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
+@php($unreadNotificationsCount = auth()->check() ? auth()->user()->unreadNotifications()->count() : 0)
+@php($recentNotifications = auth()->check() ? auth()->user()->notifications()->latest()->limit(10)->get() : collect())
+
+<body class="min-h-screen bg-slate-950 text-slate-50 flex flex-col"
+    data-auth-user-id="{{ auth()->id() }}"
+    data-unread-notifications-count="{{ $unreadNotificationsCount }}"
+    data-notification-read-url-template="{{ route('notifications.read', ['notification' => '__ID__']) }}">
     <div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 flex-1 flex flex-col">
-        <header class="mb-8 sm:mb-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-start lg:gap-4">
+        <header class="relative mb-8 sm:mb-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-start lg:gap-4">
             <div class="flex w-full items-center justify-between gap-4 lg:w-auto">
                 <a href="{{ route('coach.index') }}" class="flex items-center gap-2 hover:opacity-90 transition-opacity">
                     <div
@@ -41,10 +47,10 @@
 
                     <button type="button" data-notification-trigger
                         class="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 text-slate-100 hover:border-slate-300 hover:text-slate-50 transition-colors focus:outline-hidden focus:ring-2 focus:ring-emerald-400/50 lg:hidden cursor-pointer"
-                        aria-label="Open notifications">
+                        aria-label="Open notifications" aria-expanded="false" aria-controls="notification-panel">
                         <x-heroicon-o-bell class="h-5 w-5" />
-                        <span
-                            class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-emerald-400"></span>
+                        <span data-notification-badge
+                            class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-emerald-400 {{ $unreadNotificationsCount > 0 ? '' : 'hidden' }}"></span>
                         <span class="sr-only">Notifications</span>
                     </button>
                 </div>
@@ -73,11 +79,14 @@
 
             <button type="button" data-notification-trigger
                 class="relative hidden h-9 w-9 items-center justify-center rounded-full border border-slate-700 text-slate-100 hover:border-slate-300 hover:text-slate-50 transition-colors focus:outline-hidden focus:ring-2 focus:ring-emerald-400/50 lg:inline-flex cursor-pointer"
-                aria-label="Open notifications">
+                aria-label="Open notifications" aria-expanded="false" aria-controls="notification-panel">
                 <x-heroicon-o-bell class="h-5 w-5" />
-                <span class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-emerald-400"></span>
+                <span data-notification-badge
+                    class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-emerald-400 {{ $unreadNotificationsCount > 0 ? '' : 'hidden' }}"></span>
                 <span class="sr-only">Notifications</span>
             </button>
+
+            <x-notification-dropdown :notifications="$recentNotifications" />
         </header>
 
         <main class="flex-1">
