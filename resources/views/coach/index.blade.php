@@ -16,23 +16,43 @@
         <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <a href="{{ route('coach.clients') }}?tab=applied"
                 class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 hover:border-slate-700 transition-colors">
-                <p class="text-2xl font-bold text-slate-50">{{ $stats['applied'] }}</p>
-                <p class="text-xs text-slate-400 mt-0.5">Active clients</p>
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <p class="text-2xl font-bold text-slate-50">{{ $stats['applied'] }}</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Active clients</p>
+                    </div>
+                    <x-iconpark-dumbbell-o class="h-5 w-5 text-emerald-300" />
+                </div>
             </a>
             <a href="{{ route('coach.clients') }}?tab=pending"
                 class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 hover:border-slate-700 transition-colors">
-                <p class="text-2xl font-bold text-slate-50">{{ $stats['pending'] }}</p>
-                <p class="text-xs text-slate-400 mt-0.5">Pending approval</p>
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <p class="text-2xl font-bold text-slate-50">{{ $stats['pending'] }}</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Pending approval</p>
+                    </div>
+                    <x-gmdi-pending-actions-o class="h-5 w-5 text-amber-300" />
+                </div>
             </a>
             <a href="{{ route('coach.clients') }}?tab=leads"
                 class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 hover:border-slate-700 transition-colors">
-                <p class="text-2xl font-bold text-slate-50">{{ $stats['leads'] }}</p>
-                <p class="text-xs text-slate-400 mt-0.5">Leads</p>
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <p class="text-2xl font-bold text-slate-50">{{ $stats['leads'] }}</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Leads</p>
+                    </div>
+                    <x-fluentui-form-20-o class="h-5 w-5 text-sky-300" />
+                </div>
             </a>
             <a href="{{ route('coach.clients') }}?tab=finished"
                 class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 hover:border-slate-700 transition-colors">
-                <p class="text-2xl font-bold text-slate-50">{{ $stats['finished'] }}</p>
-                <p class="text-xs text-slate-400 mt-0.5">Finished</p>
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <p class="text-2xl font-bold text-slate-50">{{ $stats['finished'] }}</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Finished</p>
+                    </div>
+                    <x-gmdi-done class="h-5 w-5 text-emerald-300" />
+                </div>
             </a>
         </section>
 
