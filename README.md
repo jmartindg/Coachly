@@ -46,21 +46,23 @@ File reference: [Dockerfile](https://github.com/jmartindg/Coachly/blob/main/Dock
 Current production CMD in `Dockerfile` (migrate + icon cache, no seed reset on deploy):
 
 ```dockerfile
-CMD ["sh", "-c", "touch database/database.sqlite && php artisan migrate --force && php artisan icons:cache --no-interaction && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
+CMD ["sh", "-c", "touch database/database.sqlite && php artisan migrate --force && php -d memory_limit=256M artisan icons:cache --no-interaction && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
 ```
 
 Backup `Dockerfile` CMD (includes seeding on every deploy):
 
 ```dockerfile
-CMD ["sh", "-c", "touch database/database.sqlite && php artisan migrate --force && php artisan db:seed --force && php artisan icons:cache --no-interaction && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
+CMD ["sh", "-c", "touch database/database.sqlite && php artisan migrate --force && php artisan db:seed --force && php -d memory_limit=256M artisan icons:cache --no-interaction && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
 ```
 
 ### Production Deployment
 
 - The production app is deployed on **Render**.
 - The production database uses **Neon Postgres**.
-- Run `php artisan icons:cache` during deploy after install/migrations so large icon sets stay fast in production.
-- If icon sets change, run `php artisan icons:clear` then `php artisan icons:cache`.
+- Icon caching runs during startup with an increased PHP memory limit for reliability.
+- If icon sets change manually, you can refresh cache with:
+  - `php -d memory_limit=256M artisan icons:clear`
+  - `php -d memory_limit=256M artisan icons:cache --no-interaction`
 
 **Disclaimer:** This setup runs on free-tier services, so slower response times and cold starts are expected.
 

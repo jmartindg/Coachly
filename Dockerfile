@@ -46,4 +46,4 @@ ENV LOG_CHANNEL=stderr
 
 EXPOSE 10000
 
-CMD ["sh", "-c", "touch database/database.sqlite && php artisan migrate --force && php artisan icons:cache --no-interaction && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
+CMD ["sh", "-c", "touch database/database.sqlite && php artisan migrate --force && php -d memory_limit=256M artisan icons:cache --no-interaction && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
