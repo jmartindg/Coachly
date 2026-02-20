@@ -125,6 +125,11 @@
                                             Prefers: {{ implode(' · ', $applicant->workoutStylePreferenceLabels()) }}
                                         </p>
                                     @endif
+                                    @if ($applicant->formattedRequestedSession())
+                                        <p class="text-xs text-sky-300/90 mt-1">
+                                            Session: {{ $applicant->formattedRequestedSession() }}
+                                        </p>
+                                    @endif
                                 </div>
                                 <div class="shrink-0 flex items-center gap-3">
                                     <span

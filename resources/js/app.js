@@ -175,7 +175,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    const { authUserId, unreadNotificationsCount, notificationReadUrlTemplate } = document.body.dataset;
+    const { authUserId, unreadNotificationsCount, notificationReadUrlTemplate, notificationSoundUrl } =
+        document.body.dataset;
     const badgeElements = document.querySelectorAll('[data-notification-badge]');
     const triggerElements = document.querySelectorAll('[data-notification-trigger]');
     const panelElement = document.querySelector('[data-notification-panel]');
@@ -184,6 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const pageListElement = document.querySelector('[data-notification-page-list]');
     const pageEmptyElement = document.querySelector('[data-notification-page-empty]');
     const pagePaginationElement = document.querySelector('[data-notification-page-pagination]');
+
+    const baseTitle = document.title;
 
     if (!authUserId) {
         return;
@@ -195,10 +198,20 @@ document.addEventListener('DOMContentLoaded', () => {
         unreadCount = 0;
     }
 
+    const updateDocumentTitle = () => {
+        if (unreadCount < 1) {
+            document.title = baseTitle;
+        } else {
+            const prefix = unreadCount === 1 ? '1 new notification' : `${unreadCount} new notifications`;
+            document.title = `${prefix} - ${baseTitle}`;
+        }
+    };
+
     const renderBadges = () => {
         badgeElements.forEach((badgeElement) => {
             badgeElement.classList.toggle('hidden', unreadCount < 1);
         });
+        updateDocumentTitle();
     };
 
     const setTriggersExpanded = (isExpanded) => {
@@ -437,5 +450,11 @@ document.addEventListener('DOMContentLoaded', () => {
             renderBadges();
             prependNotification(notification);
             prependNotificationToPage(notification);
+
+            if (notificationSoundUrl) {
+                const audio = new Audio(notificationSoundUrl);
+                audio.loop = false;
+                audio.play().catch(() => {});
+            }
         });
 });

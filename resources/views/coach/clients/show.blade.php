@@ -67,6 +67,13 @@
                 </div>
             </dl>
 
+            @if ($client->formattedRequestedSession() && $client->client_status->value !== 'finished')
+                <div class="mt-6 pt-6 border-t border-slate-800">
+                    <h3 class="text-xs text-slate-400 uppercase tracking-[0.2em] mb-2">Requested session</h3>
+                    <p class="text-sm text-slate-50">{{ $client->formattedRequestedSession() }}</p>
+                </div>
+            @endif
+
             @if (! empty($client->workout_style_preferences))
                 <div class="mt-6 pt-6 border-t border-slate-800">
                     <h3 class="text-xs text-slate-400 uppercase tracking-[0.2em] mb-2">Preferred workout styles</h3>

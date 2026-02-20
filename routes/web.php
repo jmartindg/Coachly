@@ -42,6 +42,7 @@ Route::middleware(['auth', 'client', 'no-cache'])->group(function () {
     Route::get('/client/program', [ClientController::class, 'program'])->name('client.program');
     Route::get('/client/profile', [ClientController::class, 'profile'])->name('client.profile');
     Route::put('/client/profile', [ClientController::class, 'updateProfile'])->name('client.profile.update');
+    Route::get('/client/booked-slots', [ClientController::class, 'bookedSlots'])->name('client.booked-slots');
     Route::post('/client/apply', [ClientController::class, 'apply'])->name('client.apply');
 });
 

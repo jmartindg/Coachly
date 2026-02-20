@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ClientStatus;
 use App\Enums\Role;
 use App\Enums\Sex;
+use Carbon\Carbon;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -37,6 +38,8 @@ class User extends Authenticatable
         'weight',
         'mobile_number',
         'workout_style_preferences',
+        'appointment_date',
+        'appointment_time',
     ];
 
     /**
@@ -64,7 +67,24 @@ class User extends Authenticatable
             'last_approved_at' => 'datetime',
             'sex' => Sex::class,
             'workout_style_preferences' => 'array',
+            'appointment_date' => 'date',
         ];
+    }
+
+    /**
+     * Human-readable requested session (e.g. "Mar 15, 2026 at 9:00 AM") or null.
+     */
+    public function formattedRequestedSession(): ?string
+    {
+        if (! $this->appointment_date || ! $this->appointment_time) {
+            return null;
+        }
+
+        $hour = (int) substr($this->appointment_time, 0, 2);
+        $min = (int) substr($this->appointment_time, 3, 2);
+        $date = Carbon::parse($this->appointment_date)->setTime($hour, $min);
+
+        return $date->format('M j, Y \a\t g:i A');
     }
 
     /**

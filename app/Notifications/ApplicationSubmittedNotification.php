@@ -35,11 +35,17 @@ class ApplicationSubmittedNotification extends Notification implements ShouldQue
             ? "{$this->client->name} reapplied for coaching."
             : "{$this->client->name} applied for coaching.";
 
+        $appointment = $this->client->formattedRequestedSession();
+        if ($appointment !== null) {
+            $message .= ' Requested session: '.$appointment.'.';
+        }
+
         return [
             'type' => 'application_submitted',
             'application_id' => $this->client->id,
             'title' => 'New coaching application',
             'message' => $message,
+            'appointment' => $appointment,
             'url' => route('coach.clients', ['tab' => 'pending']),
             'created_at' => now()->toISOString(),
         ];

@@ -18,7 +18,8 @@
 <body class="min-h-screen bg-slate-950 text-slate-50 flex flex-col"
     data-auth-user-id="{{ auth()->id() }}"
     data-unread-notifications-count="{{ $unreadNotificationsCount }}"
-    data-notification-read-url-template="{{ route('notifications.read', ['notification' => '__ID__']) }}">
+    data-notification-read-url-template="{{ route('notifications.read', ['notification' => '__ID__']) }}"
+    data-notification-sound-url="{{ asset('audio/new-notification.mp3') }}">
     <div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 flex-1 flex flex-col">
         <header class="relative mb-8 sm:mb-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-start lg:gap-4">
             <div class="flex w-full items-center justify-between gap-4 lg:w-auto">

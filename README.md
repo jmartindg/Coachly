@@ -63,6 +63,8 @@ php artisan config:clear
 
 `composer run dev` already runs the app server, queue worker, logs, and Vite.
 
+The notification sound is played when a new realtime notification arrives. Place your audio file at `public/audio/new-notification.mp3` (or update the path in the coach and client layouts).
+
 ### Test Users
 
 After running `php artisan migrate:fresh --seed`, use these credentials:
@@ -87,18 +89,22 @@ Coachly is an online fitness coaching platform that helps coaches manage clients
 ## Client Experience
 
 - Apply for coaching and select preferred training styles.
+- **Book a session** when applying: choose a date (no past dates) and start time (8 AM–6 PM, 12-hour format). Time slots already booked by other clients are disabled for the selected date and validated on submit. Requested session is shown on your dashboard while pending or active.
 - View assigned program and training details.
 - Update personal profile information from their account.
 - Re-apply after finishing a coaching cycle.
+- **Realtime notifications**: sound plays for new notifications; browser tab title shows e.g. “1 new notification” when there are unread notifications.
 
 ## Coach Experience
 
 - Review new applications and manage client pipeline.
+- See **requested session** (date and time) for pending and active clients on the client list and client detail page. Not shown for finished clients; a new session appears when a client applies again.
 - Move clients through coaching stages (lead, pending, active, finished).
 - Assign training programs to active clients.
 - View client profile details and preferences.
 - Edit public coaching style cards shown across the website.
 - Mark one coaching style as **Most Popular** with live preview before saving.
+- **Realtime notifications**: new application notifications include requested session when provided; sound and browser tab title for unread notifications.
 
 ## Public Website Features
 

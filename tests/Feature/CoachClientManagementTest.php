@@ -130,6 +130,42 @@ test('lead client can apply with workout style preferences', function () {
     Notification::assertSentTo($coach, ApplicationSubmittedNotification::class);
 });
 
+test('lead client can apply with requested session and coach sees it in notification', function () {
+    Notification::fake();
+
+    $coach = User::factory()->coach()->create();
+
+    /** @var User $client */
+    $client = User::factory()->create([
+        'client_status' => ClientStatus::Lead,
+        'name' => 'Session Booker',
+    ]);
+
+    $appointmentDate = now()->addDays(3)->format('Y-m-d');
+    $appointmentTime = '09:00';
+
+    $response = actingAs($client)->post(route('client.apply'), [
+        'workout_style_preferences' => ['online_coaching'],
+        'appointment_date' => $appointmentDate,
+        'appointment_time' => $appointmentTime,
+    ]);
+
+    $response->assertRedirect(route('client.index'));
+    $response->assertSessionHas('success');
+
+    $client->refresh();
+    expect($client->appointment_date->format('Y-m-d'))->toBe($appointmentDate);
+    expect($client->appointment_time)->toBe($appointmentTime);
+    expect($client->formattedRequestedSession())->not->toBeNull();
+
+    Notification::assertSentTo($coach, ApplicationSubmittedNotification::class, function (ApplicationSubmittedNotification $n) use ($coach, $client): bool {
+        $data = $n->toArray($coach);
+
+        return str_contains($data['message'], 'Requested session:')
+            && $data['appointment'] === $client->formattedRequestedSession();
+    });
+});
+
 test('client cannot apply with more than three workout styles', function () {
     /** @var User $client */
     $client = User::factory()->create([
@@ -143,6 +179,32 @@ test('client cannot apply with more than three workout styles', function () {
     $response->assertRedirect();
     $response->assertSessionHasErrors('workout_style_preferences');
 
+    expect($client->fresh()->client_status)->toBe(ClientStatus::Lead);
+});
+
+test('client cannot book a time slot already booked by another client', function () {
+    $appointmentDate = now()->addDays(5)->format('Y-m-d');
+    $appointmentTime = '10:00';
+
+    User::factory()->create([
+        'client_status' => ClientStatus::Pending,
+        'appointment_date' => $appointmentDate,
+        'appointment_time' => $appointmentTime,
+    ]);
+
+    /** @var User $client */
+    $client = User::factory()->create([
+        'client_status' => ClientStatus::Lead,
+    ]);
+
+    $response = actingAs($client)->post(route('client.apply'), [
+        'workout_style_preferences' => ['online_coaching'],
+        'appointment_date' => $appointmentDate,
+        'appointment_time' => $appointmentTime,
+    ]);
+
+    $response->assertRedirect();
+    $response->assertSessionHasErrors('appointment_time');
     expect($client->fresh()->client_status)->toBe(ClientStatus::Lead);
 });
 

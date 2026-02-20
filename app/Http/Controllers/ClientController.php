@@ -10,7 +10,9 @@ use App\Http\Requests\UpdateProfileRequest;
 use App\Models\User;
 use App\Notifications\ApplicationSubmittedNotification;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
@@ -45,6 +47,28 @@ class ClientController extends Controller
         return view('client.profile');
     }
 
+    /**
+     * Return time slots already booked by other clients for the given date.
+     */
+    public function bookedSlots(Request $request): JsonResponse
+    {
+        $request->validate(['date' => ['required', 'date', 'after_or_equal:today']]);
+
+        $date = $request->input('date');
+        $bookedTimes = User::query()
+            ->where('role', Role::Client)
+            ->whereIn('client_status', [ClientStatus::Pending, ClientStatus::Applied])
+            ->whereDate('appointment_date', $date)
+            ->whereNotNull('appointment_time')
+            ->when(Auth::id(), fn ($q) => $q->where('id', '!=', Auth::id()))
+            ->pluck('appointment_time')
+            ->unique()
+            ->values()
+            ->all();
+
+        return response()->json(['booked_times' => $bookedTimes]);
+    }
+
     public function updateProfile(UpdateProfileRequest $request): RedirectResponse
     {
         $user = $request->user();
@@ -76,7 +100,11 @@ class ClientController extends Controller
         $user->update([
             'client_status' => ClientStatus::Pending,
             'workout_style_preferences' => $validated['workout_style_preferences'],
+            'appointment_date' => $validated['appointment_date'] ?? null,
+            'appointment_time' => $validated['appointment_time'] ?? null,
         ]);
+
+        $user = $user->fresh();
 
         User::query()
             ->where('role', Role::Coach)
